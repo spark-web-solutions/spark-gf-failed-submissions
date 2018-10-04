@@ -30,6 +30,7 @@ if (class_exists('GFForms')) {
         protected $_short_title = 'Failed Submissions';
 
         private static $_instance = null;
+        private $interval_transient = 'spark-gf-failed-submissions-last-notification';
 
         public static function get_instance() {
             if (self::$_instance == null) {
@@ -49,7 +50,11 @@ if (class_exists('GFForms')) {
             add_action('gform_form_actions', array($this, 'add_form_action'), 10, 4);
             add_filter('gform_toolbar_menu', array($this, 'toolbar_menu'), 10, 2);
             add_filter('gform_addon_navigation', array($this, 'create_menu'));
+        }
 
+        public function init() {
+            parent::init();
+            $this->setDefaults();
         }
 
         public function scripts() {
@@ -121,7 +126,7 @@ if (class_exists('GFForms')) {
         public function plugin_settings_fields() {
             return array(
                     array(
-                            'title'  => 'Site-Wide Notifications',
+                            'title'  => __('Site-Wide Notifications', 'spark-gf-failed-submissions'),
                             'description' => __('These settings define when notifications will be sent for failed submissions across all forms. If either field is left blank or set to zero, site-wide notifications will be disabled.', 'spark-gf-failed-submissions'),
                             'fields' => array(
                                     array(
@@ -143,8 +148,8 @@ if (class_exists('GFForms')) {
                             ),
                     ),
                     array(
-                            'title'  => 'Per-Form Notifications',
-                            'description' => __('These settings define when notifications will be sent for failed submissions on a single form. If either field is left blank or set to zero, per-form notifications will be disabled.', 'spark-gf-failed-submissions'),
+                            'title'  => __('Per-Form Notifications', 'spark-gf-failed-submissions'),
+                            'description' => __('These settings define when notifications will be sent for failed submissions on a single form. If either field is left blank or set to zero, per-form notifications will be disabled. Individual forms can be configured to override these settings.', 'spark-gf-failed-submissions'),
                             'fields' => array(
                                     array(
                                             'name'    => 'form_fail_count',
@@ -165,7 +170,7 @@ if (class_exists('GFForms')) {
                             ),
                     ),
                     array(
-                            'title'  => 'Notification Recipients',
+                            'title'  => __('General Settings', 'spark-gf-failed-submissions'),
                             'fields' => array(
                                     array(
                                             'name'    => 'notification_email',
@@ -173,13 +178,42 @@ if (class_exists('GFForms')) {
                                             'label'   => __('Send Notifications To', 'spark-gf-failed-submissions'),
                                             'type'    => 'text',
                                             'class'   => 'large',
+                                            'required' => true,
                                             'default_value' => get_option('admin_email'),
                                             'validation_callback' => array($this, 'validate_email'),
                                     ),
-
+                                    array(
+                                            'name'    => 'email_interval',
+                                            'tooltip' => __('Enter the length of time (in minutes) that the system should wait between sending failure notifications. E.g. if set to 5 (default) it will send no more than one email every 5 mintues.', 'spark-gf-failed-submissions'),
+                                            'label'   => __('Interval Between Emails', 'spark-gf-failed-submissions'),
+                                            'type'    => 'text',
+                                            'class'   => 'small',
+                                            'required' => true,
+                                            'default_value' => 5,
+                                            'validation_callback' => array($this, 'validate_number'),
+                                    ),
                             ),
                     ),
             );
+        }
+
+        /**
+         * Set default values for required settings
+         */
+        private function setDefaults() {
+            $dirty = false;
+            $settings = $this->get_plugin_settings();
+            if (empty($settings['notification_email'])) {
+                $settings['notification_email'] = get_option('admin_email');
+                $dirty = true;
+            }
+            if (empty($settings['email_interval'])) {
+                $settings['email_interval'] = 5;
+                $dirty = true;
+            }
+            if ($dirty) {
+                $this->update_plugin_settings($settings);
+            }
         }
 
         public function check_for_failed_submission($validation_result) {
@@ -242,7 +276,7 @@ if (class_exists('GFForms')) {
                 $wpdb->insert($wpdb->spark_gf_failed_submissions, $data, $format);
                 $submission_id = $wpdb->insert_id;
 
-                //
+                // Track the specific field details
                 $format = array(
                         '%d',
                         '%d',
@@ -279,38 +313,42 @@ if (class_exists('GFForms')) {
 
                 /* === Notifications === */
 
-                // First check if we've hit the site-wide threshold
+                // First make sure we haven't sent an email too recently
                 $settings = $this->get_plugin_settings();
-                $threshold = intval($settings['site_fail_count']);
-                $minutes = intval($settings['site_fail_time']);
-
-                if (!empty($threshold) && !empty($minutes)) { // Empty value in either field means notifications are disabled
-                    $cutoff = clone $datetime_gmt;
-                    $cutoff->sub(new DateInterval('PT'.$minutes.'M'));
-
-                    $sql = 'SELECT COUNT(*) FROM '.$wpdb->spark_gf_failed_submissions.' WHERE date_created_gmt >= %s';
-                    $query = $wpdb->prepare($sql, $cutoff->format('Y-m-d H:i:s'));
-                    $count = intval($wpdb->get_var($query));
-                    if ($count >= $threshold) {
-                        $this->send_site_notification($count);
-                    }
-                }
-
-                // And check if we've hit the individual form threshold
-                $form_settings = $this->get_form_settings($form);
-                if ($form_settings['form_fail_count'] !== '0' && $form_settings['form_fail_time'] !== '0') { // Form setting of zero means notifications are disabled for this form (but blank means use global settings)
-                    $threshold = !empty(intval($form_settings['form_fail_count'])) ? intval($form_settings['form_fail_count']) : intval($settings['form_fail_count']);
-                    $minutes = !empty(intval($form_settings['form_fail_time'])) ? intval($form_settings['form_fail_time']) : intval($settings['form_fail_time']);
+                $last_notification = get_transient($this->interval_transient);
+                if (false === $last_notification || (int)$last_notification < current_time('timestamp')-$settings['email_interval']*MINUTE_IN_SECONDS) {
+                    // Check if we've hit the site-wide threshold
+                    $threshold = intval($settings['site_fail_count']);
+                    $minutes = intval($settings['site_fail_time']);
 
                     if (!empty($threshold) && !empty($minutes)) { // Empty value in either field means notifications are disabled
                         $cutoff = clone $datetime_gmt;
                         $cutoff->sub(new DateInterval('PT'.$minutes.'M'));
 
-                        $sql = 'SELECT COUNT(*) FROM '.$wpdb->spark_gf_failed_submissions.' WHERE form_id = %d AND date_created_gmt >= %s';
-                        $query = $wpdb->prepare($sql, $form['id'], $cutoff->format('Y-m-d H:i:s'));
+                        $sql = 'SELECT COUNT(*) FROM '.$wpdb->spark_gf_failed_submissions.' WHERE date_created_gmt >= %s';
+                        $query = $wpdb->prepare($sql, $cutoff->format('Y-m-d H:i:s'));
                         $count = intval($wpdb->get_var($query));
                         if ($count >= $threshold) {
-                            $this->send_form_notification($count, $form);
+                            $this->send_site_notification($count);
+                        }
+                    }
+
+                    // And check if we've hit the individual form threshold
+                    $form_settings = $this->get_form_settings($form);
+                    if ($form_settings['form_fail_count'] !== '0' && $form_settings['form_fail_time'] !== '0') { // Form setting of zero means notifications are disabled for this form (but blank means use global settings)
+                        $threshold = !empty(intval($form_settings['form_fail_count'])) ? intval($form_settings['form_fail_count']) : intval($settings['form_fail_count']);
+                        $minutes = !empty(intval($form_settings['form_fail_time'])) ? intval($form_settings['form_fail_time']) : intval($settings['form_fail_time']);
+
+                        if (!empty($threshold) && !empty($minutes)) { // Empty value in either field means notifications are disabled
+                            $cutoff = clone $datetime_gmt;
+                            $cutoff->sub(new DateInterval('PT'.$minutes.'M'));
+
+                            $sql = 'SELECT COUNT(*) FROM '.$wpdb->spark_gf_failed_submissions.' WHERE form_id = %d AND date_created_gmt >= %s';
+                            $query = $wpdb->prepare($sql, $form['id'], $cutoff->format('Y-m-d H:i:s'));
+                            $count = intval($wpdb->get_var($query));
+                            if ($count >= $threshold) {
+                                $this->send_form_notification($count, $form);
+                            }
                         }
                     }
                 }
@@ -461,6 +499,10 @@ if (class_exists('GFForms')) {
         }
 
         private function send_notification($subject, $message) {
+            // Track send time
+            set_transient($this->interval_transient, current_time('timestamp'), $this->get_plugin_setting('email_interval')*MINUTE_IN_SECONDS);
+
+            // Send email
             $to = $this->get_plugin_setting('notification_email');
             return wp_mail($to, $subject, $message);
         }
