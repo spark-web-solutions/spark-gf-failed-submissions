@@ -530,8 +530,8 @@ if (class_exists('GFForms')) {
                                     $user_details = $failed_submission->email;
                                 }
                                 echo '            <tr class="type-page status-publish hentry iedit author-other level-0" id="lineitem-'.$failed_submission->id.'">'."\n";
-                                echo '                <td class="">'.$failed_submission->id.'</td>'."\n";
-                                echo '                <td class="date"><a href="'.$this->generate_submission_detail_link($failed_submission->id).'">'.$submission_date.'</a></td>'."\n";
+                                echo '                <td class=""><a href="'.$this->generate_submission_detail_link($failed_submission->id).'">'.$failed_submission->id.'</a></td>'."\n";
+                                echo '                <td class="date">'.$submission_date.'</td>'."\n";
                                 echo '                <td class="">'.$user_details.'</td>'."\n";
                                 echo '                <td class="">'.$failed_submission->validation_message.'</td>'."\n";
                                 echo '                <td class="">'.$failed_submission->user_ip.'</td>'."\n";
