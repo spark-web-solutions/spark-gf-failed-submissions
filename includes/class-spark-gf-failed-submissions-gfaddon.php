@@ -60,28 +60,30 @@ if (class_exists('GFForms')) {
         public function scripts() {
             // This isn't the intended use of this function, but it works well enough for now
             // @todo find a better place to enqueue these
-            $scripts = array();
-            switch ($this->get_page()) {
-                case 'submission_list':
-                    $scripts = array(
-                            'wp-lists',
-                            'wp-ajax-response',
-                            'thickbox',
-                            'gform_json',
-                            'gform_field_filter',
-                            'sack',
-                    );
-                    break;
-                case 'submission_detail':
-                    $scripts = array(
-                            'gform_json',
-                            'sack',
-                            'postbox',
-                    );
-                    break;
-            }
-            foreach ($scripts as $script) {
-                wp_enqueue_script($script);
+            if (is_admin()) {
+                $scripts = array();
+                switch ($this->get_page()) {
+                    case 'submission_list':
+                        $scripts = array(
+                        'wp-lists',
+                        'wp-ajax-response',
+                        'thickbox',
+                        'gform_json',
+                        'gform_field_filter',
+                        'sack',
+                        );
+                        break;
+                    case 'submission_detail':
+                        $scripts = array(
+                        'gform_json',
+                        'sack',
+                        'postbox',
+                        );
+                        break;
+                }
+                foreach ($scripts as $script) {
+                    wp_enqueue_script($script);
+                }
             }
             return parent::scripts();
         }
@@ -89,7 +91,9 @@ if (class_exists('GFForms')) {
         public function styles() {
             // This isn't the intended use of this function, but it works well enough for now
             // @todo find a better place to enqueue these
-            wp_enqueue_style('gform_admin');
+            if (is_admin()) {
+                wp_enqueue_style('gform_admin');
+            }
             return parent::styles();
         }
 
