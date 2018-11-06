@@ -235,7 +235,7 @@ if (class_exists('GFForms')) {
                 $failed_fields = array();
                 foreach ($form['fields'] as $field) {
                     if (empty($email) && $field->type == 'email') {
-                        $email = rgpost($field->id);
+                        $email = rgpost('input_'.$field->id);
                     }
                     if ($field->failed_validation) {
                         $failed_fields[$field->id] = $field;
@@ -484,7 +484,7 @@ if (class_exists('GFForms')) {
                             $user = new WP_User($submission->submitted_by);
                             $user_details = '<a href="'.get_edit_user_link($user->ID).'" target="_blank">'.$user->display_name.' ('.$user->user_email.')</a>';
                         } else {
-                            $user_details = $submission->user_email;
+                            $user_details = $submission->email;
                         }
                         if (!empty($user_details)) {
 ?>
@@ -527,7 +527,7 @@ if (class_exists('GFForms')) {
                                     $user = new WP_User($failed_submission->submitted_by);
                                     $user_details = '<a href="'.get_edit_user_link($user->ID).'" target="_blank">'.$user->display_name.' ('.$user->user_email.')</a>';
                                 } else {
-                                    $user_details = $failed_submission->user_email;
+                                    $user_details = $failed_submission->email;
                                 }
                                 echo '            <tr class="type-page status-publish hentry iedit author-other level-0" id="lineitem-'.$failed_submission->id.'">'."\n";
                                 echo '                <td class="">'.$failed_submission->id.'</td>'."\n";
