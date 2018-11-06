@@ -421,44 +421,130 @@ if (class_exists('GFForms')) {
                 GFCommon::display_dismissible_message();
                 GFForms::top_toolbar();
 
-                $column_headings  = '            <tr>'."\n";
-                $column_headings .= '                <th style="" class="manage-column column-date column-primary" id="date" scope="col">'.__('Date', 'spark-gf-failed-submissions').'</th>'."\n";
-                $column_headings .= '                <th style="" class="manage-column" id="user" scope="col">'.__('Submitted By', 'spark-gf-failed-submissions').'</th>'."\n";
-                $column_headings .= '                <th style="" class="manage-column" id="message" scope="col">'.__('Error Message', 'spark-gf-failed-submissions').'</th>'."\n";
-                $column_headings .= '                <th style="" class="manage-column" id="ip" scope="col">'.__('IP Address', 'spark-gf-failed-submissions').'</th>'."\n";
-                $column_headings .= '            </tr>'."\n";
-
-                $failed_submissions = Spark_Gf_Failed_Submissions_Api::get_submissions($form_id);
-                echo '    <div class="tablenav top"></div>'."\n";
-                echo '    <table class="wp-list-table widefat fixed striped">'."\n";
-                echo '        <thead>'."\n";
-                echo $column_headings;
-                echo '        </thead>'."\n";
-                echo '        <tbody id="the-list">'."\n";
-                if (empty($failed_submissions)) {
-                    echo '<tr class="no-items"><td class="colspanchange" colspan="4">'.__('This form does not have any failed submissions yet.', 'spark-gf-failed-submissions').'</td></tr>'."\n";
-                } else {
-                    foreach ($failed_submissions as $failed_submission) {
-                        $submission_date = get_date_from_gmt($failed_submission->date_created_gmt, get_option('date_format').' '.get_option('time_format'));
-                        if (!empty($failed_submission->submitted_by)) {
-                            $user = new WP_User($failed_submission->submitted_by);
+                switch ($this->get_page()) {
+                    case 'submission_detail':
+                        $id = (int)$_GET['sid'];
+                        $form_id = (int)$_GET['id'];
+                        $submission = Spark_Gf_Failed_Submissions_Api::get_submission($id);
+                        $fields = Spark_Gf_Failed_Submissions_Api::get_submission_fields($id);
+                        $form = GFAPI::get_form($form_id);
+                        $form_fields = array();
+                        foreach ($form['fields'] as $field) {
+                            $form_fields[$field->id] = $field->label;
+                        }
+                        $screen = get_current_screen();
+?>
+	<script type="text/javascript">
+		jQuery(document).ready(function () {
+			toggleNotificationOverride(true);
+			if (typeof postboxes != 'undefined') {
+				jQuery('.if-js-closed').removeClass('if-js-closed').addClass('closed');
+				postboxes.add_postbox_toggles( <?php echo json_encode($screen->id); ?>);
+			}
+		});
+    </script>
+    <div id="poststuff">
+        <div id="post-body" class="metabox-holder columns-2">
+            <div id="post-body-content">
+                <table class="widefat fixed entry-detail-view" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th id="details" colspan="2"><?php echo $form['title']; ?> : <?php echo sprintf(__('Failed Submission # %d', 'spark-gf-failed-submissions'), $id); ?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+<?php
+                        foreach ($fields as $field) {
+?>
+                        <tr>
+                            <td colspan="2" class="entry-view-field-name"><?php echo $form_fields[$field->field_id]; ?></td>
+                        </tr>
+                        <tr>
+                            <td class="entry-view-field-value"><?php echo maybe_unserialize($field->submitted_value); ?></td>
+                            <td class="entry-view-field-value"><?php echo $field->validation_message; ?></td>
+                        </tr>
+<?php
+                        }
+?>
+                   </tbody>
+                </table>
+            </div>
+            <div id="postbox-container-1" class="postbox-container">
+                <div id="side-sortables">
+                    <div id="submitdiv" class="postbox">
+                        <h2><span><?php echo __('Failed Submission', 'spark-gf-failed-submissions'); ?></span></h2>
+                        <div class="inside">
+                            <div id="submitcomment" class="submitbox">
+                                <div id="minor-publishing" style="padding:10px;">
+                                    <?php echo __('Submission ID', 'spark-gf-failed-submissions'); ?>: <?php echo $id; ?><br><br>
+                                    <?php echo __('Submitted on', 'gravityforms'); ?>: <?php echo get_date_from_gmt($submission->date_created_gmt, get_option('date_format').' '.get_option('time_format')); ?><br><br>
+                                    <?php echo __('User IP', 'gravityforms'); ?>: <?php echo $submission->user_ip; ?><br><br>
+<?php
+                        if (!empty($submission->submitted_by)) {
+                            $user = new WP_User($submission->submitted_by);
                             $user_details = '<a href="'.get_edit_user_link($user->ID).'" target="_blank">'.$user->display_name.' ('.$user->user_email.')</a>';
                         } else {
-                            $user_details = $failed_submission->user_email;
+                            $user_details = $submission->user_email;
                         }
-                        echo '            <tr class="type-page status-publish hentry iedit author-other level-0" id="lineitem-'.$failed_submission->id.'">'."\n";
-                        echo '                <td class="date">'.$submission_date.'</td>'."\n";
-                        echo '                <td class="">'.$user_details.'</td>'."\n";
-                        echo '                <td class="">'.$failed_submission->validation_message.'</td>'."\n";
-                        echo '                <td class="">'.$failed_submission->user_ip.'</td>'."\n";
-                        echo '            </tr>'."\n";
-                    }
+                        if (!empty($user_details)) {
+?>
+                                    <?php echo __('User', 'gravityforms'); ?>: <?php echo $user_details; ?><br><br>
+<?php
+                        }
+?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php
+                        break;
+                    case 'submission_list':
+                        $column_headings  = '            <tr>'."\n";
+                        $column_headings .= '                <th style="" class="manage-column column-primary" id="id" scope="col">'.__('Submission ID', 'spark-gf-failed-submissions').'</th>'."\n";
+                        $column_headings .= '                <th style="" class="manage-column column-date" id="date" scope="col">'.__('Date', 'spark-gf-failed-submissions').'</th>'."\n";
+                        $column_headings .= '                <th style="" class="manage-column" id="user" scope="col">'.__('Submitted By', 'spark-gf-failed-submissions').'</th>'."\n";
+                        $column_headings .= '                <th style="" class="manage-column" id="message" scope="col">'.__('Error Message', 'spark-gf-failed-submissions').'</th>'."\n";
+                        $column_headings .= '                <th style="" class="manage-column" id="ip" scope="col">'.__('IP Address', 'spark-gf-failed-submissions').'</th>'."\n";
+                        $column_headings .= '            </tr>'."\n";
+
+                        $failed_submissions = Spark_Gf_Failed_Submissions_Api::get_submissions($form_id);
+                        echo '    <div class="tablenav top"></div>'."\n";
+                        echo '    <table class="wp-list-table widefat fixed striped">'."\n";
+                        echo '        <thead>'."\n";
+                        echo $column_headings;
+                        echo '        </thead>'."\n";
+                        echo '        <tbody id="the-list">'."\n";
+                        if (empty($failed_submissions)) {
+                            echo '<tr class="no-items"><td class="colspanchange" colspan="4">'.__('This form does not have any failed submissions yet.', 'spark-gf-failed-submissions').'</td></tr>'."\n";
+                        } else {
+                            foreach ($failed_submissions as $failed_submission) {
+                                $submission_date = get_date_from_gmt($failed_submission->date_created_gmt, get_option('date_format').' '.get_option('time_format'));
+                                if (!empty($failed_submission->submitted_by)) {
+                                    $user = new WP_User($failed_submission->submitted_by);
+                                    $user_details = '<a href="'.get_edit_user_link($user->ID).'" target="_blank">'.$user->display_name.' ('.$user->user_email.')</a>';
+                                } else {
+                                    $user_details = $failed_submission->user_email;
+                                }
+                                echo '            <tr class="type-page status-publish hentry iedit author-other level-0" id="lineitem-'.$failed_submission->id.'">'."\n";
+                                echo '                <td class="">'.$failed_submission->id.'</td>'."\n";
+                                echo '                <td class="date"><a href="'.$this->generate_submission_detail_link($failed_submission->id).'">'.$submission_date.'</a></td>'."\n";
+                                echo '                <td class="">'.$user_details.'</td>'."\n";
+                                echo '                <td class="">'.$failed_submission->validation_message.'</td>'."\n";
+                                echo '                <td class="">'.$failed_submission->user_ip.'</td>'."\n";
+                                echo '            </tr>'."\n";
+                            }
+                        }
+                        echo '        </tbody>'."\n";
+                        echo '        <tfoot>'."\n";
+                        echo $column_headings;
+                        echo '        </tfoot>'."\n";
+                        echo '    </table>'."\n";
+                    break;
                 }
-                echo '        </tbody>'."\n";
-                echo '        <tfoot>'."\n";
-                echo $column_headings;
-                echo '        </tfoot>'."\n";
-                echo '    </table>'."\n";
 ?>
 </div>
 <?php
@@ -562,6 +648,19 @@ if (class_exists('GFForms')) {
             }
 
             return false;
+        }
+
+        /**
+         * Get link to view failed submission detail
+         * @param integer $submission_id
+         * @return string
+         * @since 1.1.0
+         */
+        private function generate_submission_detail_link($submission_id) {
+            $submission = Spark_Gf_Failed_Submissions_Api::get_submission($submission_id);
+            if ($submission) {
+                return self_admin_url('admin.php?page=spark_gf_failed_submissions&view=submission&id='.$submission->form_id.'&sid='.$submission_id);
+            }
         }
     }
 }
