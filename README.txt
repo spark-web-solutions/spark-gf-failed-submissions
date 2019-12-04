@@ -4,7 +4,7 @@ Tags: gravity forms, gravity, forms, validation, failed submissions, logging
 Requires at least: 3.0.1
 Tested up to: 5.3
 Requires PHP: 7.0
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -38,6 +38,10 @@ Once installed, you'll want to make sure the plugin is set up to best meet your 
 2. Form settings page
 
 == Changelog ==
+
+= 1.1.1 =
+* Fixed display of submitted values for complex fields
+* Fixed PHP warnings when no specific form settings have been configured
 
 = 1.1.0 =
 * New setting to limit emails to a specified interval
