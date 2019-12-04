@@ -305,7 +305,6 @@ if (class_exists('GFForms')) {
                     } else {
                         $value = rgpost('input_'.$field_id);
                     }
-                    $value =
                     $data = array(
                             'submission_id' => $submission_id,
                             'field_id' => $field_id,
@@ -339,6 +338,12 @@ if (class_exists('GFForms')) {
 
                     // And check if we've hit the individual form threshold
                     $form_settings = $this->get_form_settings($form);
+                    if (!is_array($form_settings)) { // No settings configured for this form - just use global settings
+                        $form_settings = array(
+                                'form_fail_count' => $settings['form_fail_count'],
+                                'form_fail_time' => $settings['form_fail_time'],
+                        );
+                    }
                     if ($form_settings['form_fail_count'] !== '0' && $form_settings['form_fail_time'] !== '0') { // Form setting of zero means notifications are disabled for this form (but blank means use global settings)
                         $threshold = !empty(intval($form_settings['form_fail_count'])) ? intval($form_settings['form_fail_count']) : intval($settings['form_fail_count']);
                         $minutes = !empty(intval($form_settings['form_fail_time'])) ? intval($form_settings['form_fail_time']) : intval($settings['form_fail_time']);
