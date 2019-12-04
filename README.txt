@@ -2,7 +2,7 @@
 Contributors: markparnell
 Tags: gravity forms, gravity, forms, validation, failed submissions, logging
 Requires at least: 3.0.1
-Tested up to: 5.0
+Tested up to: 5.3
 Requires PHP: 7.0
 Stable tag: 1.1.0
 License: GPLv2 or later
