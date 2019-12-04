@@ -431,11 +431,11 @@ if (class_exists('GFForms')) {
                         $id = (int)$_GET['sid'];
                         $form_id = (int)$_GET['id'];
                         $submission = Spark_Gf_Failed_Submissions_Api::get_submission($id);
-                        $fields = Spark_Gf_Failed_Submissions_Api::get_submission_fields($id);
+                        $submission_fields = Spark_Gf_Failed_Submissions_Api::get_submission_fields($id);
                         $form = GFAPI::get_form($form_id);
                         $form_fields = array();
-                        foreach ($form['fields'] as $field) {
-                            $form_fields[$field->id] = $field->label;
+                        foreach ($form['fields'] as $form_field) {
+                            $form_fields[$form_field->id] = $form_field;
                         }
                         $screen = get_current_screen();
 ?>
@@ -459,14 +459,29 @@ if (class_exists('GFForms')) {
                     </thead>
                     <tbody>
 <?php
-                        foreach ($fields as $field) {
+                        foreach ($submission_fields as $submission_field) {
+                            $field_value = maybe_unserialize($submission_field->submitted_value);
+                            if (is_array($field_value)) {
+                                $value_array = array_filter($field_value);
+                                switch ($form_fields[$submission_field->field_id]->type) {
+                                    case 'name':
+                                        $field_value = implode(' ', $value_array);
+                                        break;
+                                    case 'creditcard':
+                                        $field_value = $value_array[$submission_field->field_id.'.1']; // Just display card number
+                                        break;
+                                    default:
+                                        $field_value = implode('<br>', $value_array);
+                                        break;
+                                }
+                            }
 ?>
                         <tr>
-                            <td colspan="2" class="entry-view-field-name"><?php echo $form_fields[$field->field_id]; ?></td>
+                            <td colspan="2" class="entry-view-field-name"><?php echo $form_fields[$submission_field->field_id]->label; ?></td>
                         </tr>
                         <tr>
-                            <td class="entry-view-field-value"><?php echo maybe_unserialize($field->submitted_value); ?></td>
-                            <td class="entry-view-field-value"><?php echo $field->validation_message; ?></td>
+                            <td class="entry-view-field-value"><?php echo $field_value; ?></td>
+                            <td class="entry-view-field-value"><?php echo $submission_field->validation_message; ?></td>
                         </tr>
 <?php
                         }
