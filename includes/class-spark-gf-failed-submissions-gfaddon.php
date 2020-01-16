@@ -411,7 +411,6 @@ if (class_exists('GFForms')) {
                 if (empty($form_id)) {
                     $form_id = $forms[0]->id;
                 }
-                global $wpdb;
 
                 $form = GFFormsModel::get_form_meta($form_id);
 
