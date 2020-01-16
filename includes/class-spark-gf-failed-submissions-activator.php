@@ -26,6 +26,7 @@ class Spark_Gf_Failed_Submissions_Activator {
      * @return boolean
      */
     private function __construct() {
+        /* translators: %s: Name of the PHP class */
         throw new Exception(sprintf(__('%s cannot be instantiated - all methods are static.', 'spark-gf-failed-submissions'), __CLASS__));
         return false;
     }

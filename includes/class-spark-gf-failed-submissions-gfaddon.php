@@ -106,6 +106,7 @@ if (class_exists('GFForms')) {
                             'fields' => array(
                                     array(
                                             'name'    => 'form_fail_count',
+                                            /* translators: %d: Current global setting for number of submissions */
                                             'tooltip' => sprintf(__('Enter the number of failed submissions required on this form to trigger a notification. Leave blank to use the global setting (currently %d) or set to zero to disable notifications for this form.', 'spark-gf-failed-submissions'), $plugin_settings['form_fail_count']),
                                             'label'   => __('Failure Threshold', 'spark-gf-failed-submissions'),
                                             'type'    => 'text',
@@ -115,6 +116,7 @@ if (class_exists('GFForms')) {
                                     ),
                                     array(
                                             'name'    => 'form_fail_time',
+                                            /* translators: %d: Current global setting for number of minutes */
                                             'tooltip' => sprintf(__('Enter the length of time (in minutes) that failed submissions are included in the check. Leave blank to use the global setting (currently %d) or set to zero to disable notifications for this form.', 'spark-gf-failed-submissions'), $plugin_settings['form_fail_time']),
                                             'label'   => __('Timeframe', 'spark-gf-failed-submissions'),
                                             'type'    => 'text',
@@ -404,7 +406,10 @@ if (class_exists('GFForms')) {
             if (sizeof($forms) == 0) {
 ?>
 <div style="margin: 50px 0 0 10px;">
-	<?php echo sprintf( esc_html__("You don't have any active forms. Let's go %screate one%s", 'gravityforms'), '<a href="?page=gf_new_form">', '</a>'); ?>
+<?php
+    /* translators: %s: Opening and closing HTML tags to link the text to the "New Form" URL */
+	echo sprintf( esc_html__("You don't have any active forms. Let's go %screate one%s", 'gravityforms'), '<a href="?page=gf_new_form">', '</a>');
+?>
 </div>
 <?php
             } else {
@@ -453,7 +458,12 @@ if (class_exists('GFForms')) {
                 <table class="widefat fixed entry-detail-view" cellspacing="0">
                     <thead>
                         <tr>
-                            <th id="details" colspan="2"><?php echo $form['title']; ?> : <?php echo sprintf(__('Failed Submission # %d', 'spark-gf-failed-submissions'), $id); ?></th>
+                            <th id="details" colspan="2"><?php echo $form['title']; ?> :
+<?php
+                            /* translators: %d: ID of the current record */
+                            echo sprintf(__('Failed Submission # %d', 'spark-gf-failed-submissions'), $id);
+?>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -597,13 +607,16 @@ if (class_exists('GFForms')) {
 
         private function send_site_notification($count) {
             $subject = __('Site-wide failed submissions threshold reached', 'spark-gf-failed-submissions');
-            $message = sprintf(__('%d form submissions have failed in the last %d minutes on %s', 'spark-gf-failed-submissions'), $count, $this->get_plugin_setting('site_fail_time'), get_site_url());
+            /* translators: 1: Number of failures logged, 2: Time period (in minutes), 3: Site URL */
+            $message = sprintf(__('%1$d form submissions have failed in the last %2$d minutes on %3$s', 'spark-gf-failed-submissions'), $count, $this->get_plugin_setting('site_fail_time'), get_site_url());
             return $this->send_notification($subject, $message);
         }
 
         private function send_form_notification($count, array $form) {
+            /* translators: %s: Name of the form */
             $subject = sprintf(__('Failed submissions threshold reached for form: %s', 'spark-gf-failed-submissions'), $form['title']);
-            $message = sprintf(__('%d form submissions have failed in the last %d minutes on %s for the form "%s"', 'spark-gf-failed-submissions'), $count, $this->get_plugin_setting('form_fail_time'), get_site_url(), $form['title']);
+            /* translators: 1: Number of failures logged, 2: Time period (in minutes), 3: Site URL, 4; Form name */
+            $message = sprintf(__('%1$d form submissions have failed in the last %2$d minutes on %3$s for the form "%4$s"', 'spark-gf-failed-submissions'), $count, $this->get_plugin_setting('form_fail_time'), get_site_url(), $form['title']);
             return $this->send_notification($subject, $message);
         }
 
