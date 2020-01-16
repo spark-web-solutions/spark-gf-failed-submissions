@@ -74,4 +74,35 @@ class Spark_Gf_Failed_Submissions_Api {
         $result = $wpdb->get_results($query);
         return $result;
     }
+
+    /**
+     * Remove a single submission record from the database
+     * @param integer $submission_id
+     * @return integer|boolean Number of submission records deleted or false on error
+     * @since 1.2.0
+     */
+    public static function delete_submission($submission_id) {
+        global $wpdb;
+        $result = $wpdb->delete($wpdb->spark_gf_failed_submissions_fields, array('submission_id' => $submission_id));
+        if ($result !== false) {
+            $result = $wpdb->delete($wpdb->spark_gf_failed_submissions, array('id' => $submission_id));
+        }
+        return $result;
+    }
+
+    /**
+     * Remove multiple submission records from the database
+     * @param array $submission_ids
+     * @return integer|boolean Number of submission records deleted or false on error
+     * @since 1.2.0
+     */
+    public static function delete_submissions(array $submission_ids) {
+        global $wpdb;
+        $ids = implode(',', array_map('absint', $submission_ids));
+        $result = $wpdb->query('DELETE FROM '.$wpdb->spark_gf_failed_submissions_fields.' WHERE submission_id IN ('.$ids.')');
+        if ($result !== false) {
+            $result = $wpdb->query('DELETE FROM '.$wpdb->spark_gf_failed_submissions.' WHERE id IN ('.$ids.')');
+        }
+        return $result;
+    }
 }
