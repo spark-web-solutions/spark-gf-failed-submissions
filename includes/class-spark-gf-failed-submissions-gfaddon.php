@@ -417,10 +417,29 @@ if (class_exists('GFForms')) {
                     $form_id = $forms[0]->id;
                 }
 
+                if (!empty($_GET['action'])) {
+                    if (wp_verify_nonce($_GET['_wpnonce'], $this->get_slug())) {
+                        switch ($_GET['action']) {
+                            case 'delete':
+                                $ids = array_map('absint', explode(',', $_GET['sid']));
+                                $result = Spark_Gf_Failed_Submissions_Api::delete_submissions($ids);
+                                if (false === $result) {
+                                    echo '<div class="notice notice-error"><p>'.__('An error occured while attempting to delete the selected record(s). Please try again.', 'spark-gf-failed-submissions').'</p></div>';
+                                } elseif (0 === $result) {
+                                    echo '<div class="notice notice-warning"><p>'.__('No records were deleted. Please try again.', 'spark-gf-failed-submissions').'</p></div>';
+                                } else {
+                                    /* translators: %d: Number of records deleted. */
+                                    echo '<div class="notice notice-success"><p>'.sprintf(__('%d records deleted successfully.', 'spark-gf-failed-submissions'), $result).'</p></div>';
+                                }
+                                break;
+                        }
+                    } else {
+                        /* translators: %s: Opening and closing tags to link the text to the current page */
+                        echo '<div class="notice notice-error"><p>'.sprintf(__('Invalid action. Please %sreload the page%s and try again.', 'spark-gf-failed-submissions'), '<a href="'.$this->generate_clean_url().'">', '</a>').'</p></div>';
+                    }
+                }
+
                 $form = GFFormsModel::get_form_meta($form_id);
-
-//                 wp_print_styles(array('thickbox'));
-
                 echo GFCommon::get_remote_message();
 ?>
 <div class="wrap <?php echo GFCommon::get_browser_class() ?>">
@@ -429,6 +448,8 @@ if (class_exists('GFForms')) {
                 GFCommon::display_admin_message();
                 GFCommon::display_dismissible_message();
                 GFForms::top_toolbar();
+
+                $nonce = wp_create_nonce($this->get_slug());
 
                 switch ($this->get_page()) {
                     case 'submission_detail':
@@ -521,6 +542,12 @@ if (class_exists('GFForms')) {
 <?php
                         }
 ?>
+                                </div>
+                                <div id="major-publishing-actions">
+                                    <div id="delete-action">
+                                        <a class="submitdelete deletion" href="<?php echo $this->generate_submission_delete_link($submission->id, $nonce); ?>"><?php echo __('Delete Permanently', 'spark-gf-failed-submissions'); ?></a>
+                                    </div>
+                                    <div class="clear"></div>
                                 </div>
                             </div>
                         </div>
@@ -693,6 +720,33 @@ if (class_exists('GFForms')) {
             if ($submission) {
                 return self_admin_url('admin.php?page=spark_gf_failed_submissions&view=submission&id='.$submission->form_id.'&sid='.$submission_id);
             }
+        }
+
+        /**
+         * Get link to delete failed submission record
+         * @param integer $submission_id
+         * @return string
+         * @since 1.2.0
+         */
+        private function generate_submission_delete_link($submission_id, $nonce) {
+            $submission = Spark_Gf_Failed_Submissions_Api::get_submission($submission_id);
+            if ($submission) {
+                return self_admin_url('admin.php?page=spark_gf_failed_submissions&view=submissions&id='.$submission->form_id.'&sid='.$submission_id.'&action=delete&_wpnonce='.$nonce);
+            }
+        }
+
+        /**
+         * Create clean version of URL (i.e. without additional parameters)
+         * @param string $url URL to clean. Leave blank for current URL
+         * @return string Cleaned URL
+         * @since 1.2.0
+         */
+        private function generate_clean_url($url = '') {
+            $params = array('_wpnonce', 'action', 'sub_action', 'batch', 'paged', 'item');
+            if (empty($url)) {
+                return remove_query_arg($params);
+            }
+            return remove_query_arg($params, $url);
         }
     }
 }
