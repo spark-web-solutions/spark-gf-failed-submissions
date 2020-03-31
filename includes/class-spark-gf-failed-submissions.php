@@ -202,8 +202,13 @@ class Spark_Gf_Failed_Submissions {
         return $this->version;
     }
 
+    /**
+     * Initialise our GF addon
+     *
+     * @since     1.0.0
+     */
     public function load_gf_addon() {
-        if (!method_exists('GFForms', 'include_payment_addon_framework')) {
+        if (!method_exists('GFForms', 'include_addon_framework')) {
             return;
         }
 
