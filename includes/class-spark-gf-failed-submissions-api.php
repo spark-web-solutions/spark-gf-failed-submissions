@@ -77,6 +77,30 @@ class Spark_Gf_Failed_Submissions_Api {
     }
 
     /**
+     * Count the mumber of recent failed submissions matching a given filter
+     * @param array $filter List of filter criteria, e.g. array('email' => 'plugins@sparkweb.com.au', 'user_ip' => '127.0.0.1')
+     * @param integer $timeframe Optional. How far back (in minutes) to include submissions for. Default 5.
+     * @param string $relation Optional. Type of matching - either AND (match all filters) or OR (match any filter). Default AND.
+     * @return integer Number of matching failed submissions
+     * @since 1.2.0
+     */
+    public static function count_recent_submissions(array $filter, $timeframe = 5, $relation = 'AND') {
+    	global $wpdb;
+    	$where = $data = array();
+    	$time = new DateTime(current_time('mysql', true));
+    	$time->sub(new DateInterval('PT'.$timeframe.'M'));
+    	$data[] = $time->format('Y-m-d H:i:s');
+    	foreach ($filter as $field => $value) {
+    		$where[] = $field.' = %s';
+    		$data[] = $value;
+    	}
+    	$relation = strcasecmp($relation, 'OR') === 0 ? ' OR ' : ' AND ';
+    	$query = $wpdb->prepare('SELECT count(id) FROM '.$wpdb->spark_gf_failed_submissions.' WHERE date_created_gmt >= %s AND ('.implode($where, $relation).')', $data);
+    	$result = $wpdb->get_var($query);
+    	return $result;
+    }
+
+    /**
      * Remove a single submission record from the database
      * @param integer $submission_id
      * @return integer|boolean Number of submission records deleted or false on error

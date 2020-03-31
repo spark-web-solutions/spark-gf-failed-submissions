@@ -44,7 +44,8 @@ if (class_exists('GFForms')) {
             parent::pre_init();
             $this->_title = __('Spark GF Failed Submissions', 'spark-gf-failed-submissions');
             $this->_short_title = __('Failed Submissions', 'spark-gf-failed-submissions');
-            add_filter('gform_validation', array($this, 'check_for_failed_submission'), 9999); // Run our check after all validation logic
+            add_filter('gform_validation', array($this, 'maybe_block_submission'), 0); // Blocking submission should happen before any other validation
+            add_filter('gform_validation', array($this, 'check_for_failed_submission'), 9999); // Track failures after all validation logic
 
             // Add our page to view failed submissions
             add_action('gform_form_actions', array($this, 'add_form_action'), 10, 4);
@@ -100,32 +101,75 @@ if (class_exists('GFForms')) {
         public function form_settings_fields($form) {
             $plugin_settings = $this->get_plugin_settings();
             return array(
-                    array(
-                            'title'  => __('Failed Submissions', 'spark-gf-failed-submissions'),
-                            'description' => __('Use these settings to override the global per-form settings that control when notifications will be sent for failed submissions. If left blank the global setting will be used, while setting either option to zero will disable notifications for this form. Note that even if notifications are disabled, failed submissions will still be tracked for this form and will still be included in the calculations for the site-wide notifications.', 'spark-gf-failed-submissions'),
-                            'fields' => array(
-                                    array(
-                                            'name'    => 'form_fail_count',
-                                            /* translators: %d: Current global setting for number of submissions */
-                                            'tooltip' => sprintf(__('Enter the number of failed submissions required on this form to trigger a notification. Leave blank to use the global setting (currently %d) or set to zero to disable notifications for this form.', 'spark-gf-failed-submissions'), $plugin_settings['form_fail_count']),
-                                            'label'   => __('Failure Threshold', 'spark-gf-failed-submissions'),
-                                            'type'    => 'text',
-                                            'class'   => 'small',
-                                            'default_value' => '',
-                                            'validation_callback' => array($this, 'validate_number'),
-                                    ),
-                                    array(
-                                            'name'    => 'form_fail_time',
-                                            /* translators: %d: Current global setting for number of minutes */
-                                            'tooltip' => sprintf(__('Enter the length of time (in minutes) that failed submissions are included in the check. Leave blank to use the global setting (currently %d) or set to zero to disable notifications for this form.', 'spark-gf-failed-submissions'), $plugin_settings['form_fail_time']),
-                                            'label'   => __('Timeframe', 'spark-gf-failed-submissions'),
-                                            'type'    => 'text',
-                                            'class'   => 'small',
-                                            'default_value' => '',
-                                            'validation_callback' => array($this, 'validate_number'),
-                                    ),
-                            ),
-                    ),
+            		array(
+            				'title'  => __('Failed Submissions', 'spark-gf-failed-submissions'),
+            		),
+            		array(
+            				'title'  => __('Failure Notifications', 'spark-gf-failed-submissions'),
+            				'description' => __('Use these settings to override the global per-form settings that control when notifications will be sent for failed submissions. If left blank the global setting will be used, while setting either option to zero will disable notifications for this form. Note that even if notifications are disabled, failed submissions will still be tracked for this form and will still be included in the calculations for the site-wide notifications.', 'spark-gf-failed-submissions'),
+            				'fields' => array(
+            						array(
+            								'name'    => 'form_fail_count',
+            								'tooltip' => sprintf(__('Enter the number of failed submissions required on this form to trigger a notification. Leave blank to use the global setting (currently %d) or set to zero to disable notifications for this form.', 'spark-gf-failed-submissions'), $plugin_settings['form_fail_count']),
+            								'label'   => __('Failure Threshold', 'spark-gf-failed-submissions'),
+            								'type'    => 'text',
+            								'class'   => 'small',
+            								'default_value' => '',
+            								'validation_callback' => array($this, 'validate_number'),
+            						),
+            						array(
+            								'name'    => 'form_fail_time',
+            								'tooltip' => sprintf(__('Enter the length of time (in minutes) that failed submissions are included in the check. Leave blank to use the global setting (currently %d) or set to zero to disable notifications for this form.', 'spark-gf-failed-submissions'), $plugin_settings['form_fail_time']),
+            								'label'   => __('Timeframe', 'spark-gf-failed-submissions'),
+            								'type'    => 'text',
+            								'class'   => 'small',
+            								'default_value' => '',
+            								'validation_callback' => array($this, 'validate_number'),
+            						),
+            				),
+            		),
+            		array(
+            				'title'  => __('Submission Blocking', 'spark-gf-failed-submissions'),
+            				'description' => __('These settings allow you to temporarily prevent further submissions following repeated failures by the same user.', 'spark-gf-failed-submissions'),
+            				'fields' => array(
+            						array(
+            								'name'    => 'block_fail_count',
+            								'tooltip' => sprintf(__('Enter the number of failed submissions required on this form before a user is blocked. Leave blank or set to zero to disable blocking for this form.', 'spark-gf-failed-submissions'), $plugin_settings['form_fail_count']),
+            								'label'   => __('Failure Threshold', 'spark-gf-failed-submissions'),
+            								'type'    => 'text',
+            								'class'   => 'small',
+            								'default_value' => '',
+            								'validation_callback' => array($this, 'validate_number'),
+            						),
+            						array(
+            								'name'    => 'block_fail_time',
+            								'tooltip' => sprintf(__('Enter the length of time (in minutes) that failed submissions are included in the check. Leave blank or set to zero to disable blocking for this form.', 'spark-gf-failed-submissions'), $plugin_settings['form_fail_time']),
+            								'label'   => __('Timeframe', 'spark-gf-failed-submissions'),
+            								'type'    => 'text',
+            								'class'   => 'small',
+            								'default_value' => '',
+            								'validation_callback' => array($this, 'validate_number'),
+            						),
+            						// @todo Implement block time
+//             						array(
+//             								'name'    => 'block_time',
+//             								'tooltip' => sprintf(__('Enter the length of time (in minutes) that the user should be blocked for.', 'spark-gf-failed-submissions'), $plugin_settings['form_fail_time']),
+//             								'label'   => __('Block Timeframe', 'spark-gf-failed-submissions'),
+//             								'type'    => 'text',
+//             								'class'   => 'small',
+//             								'default_value' => '',
+//             								'validation_callback' => array($this, 'validate_number'),
+//             						),
+            						array(
+            								'name'    => 'block_message',
+            								'tooltip' => sprintf(__('Enter the error message displayed to users when they have been blocked due to failed submissions.', 'spark-gf-failed-submissions'), $plugin_settings['form_fail_time']),
+            								'label'   => __('Message Text', 'spark-gf-failed-submissions'),
+            								'type'    => 'text',
+            								'class'   => 'large',
+            								'default_value' => __('Too many failed submissions detected. Please wait a few minutes before trying again.', 'spark-gf-failed-submissions'),
+            						),
+            				),
+            		),
             );
         }
 
@@ -220,6 +264,38 @@ if (class_exists('GFForms')) {
             if ($dirty) {
                 $this->update_plugin_settings($settings);
             }
+        }
+
+        /**
+         * Check whether to block form submission
+         * @param array $validation_result
+         * @return array
+         * @since 1.2.0
+         */
+        public function maybe_block_submission($validation_result) {
+        	$form = $validation_result['form'];
+        	$form_settings = $this->get_form_settings($form);
+        	if (!empty($form_settings['block_fail_time']) && !empty($form_settings['block_fail_count'])) {
+        		// Submission blocking is enabled - check recent failures
+        		$filter = array(
+        				'user_ip' => GFFormsModel::get_ip(),
+        		);
+        		foreach ($form['fields'] as $field) {
+        			if ($field->type == 'email') {
+        				$filter['email'] = rgpost('input_'.$field->id);
+        				break;
+        			}
+        		}
+        		if (Spark_Gf_Failed_Submissions_Api::count_recent_submissions($filter, (int)$form_settings['block_fail_time'], 'OR') >= (int)$form_settings['block_fail_count']) {
+        			// Too many failures - block
+        			$validation_result['is_valid'] = false;
+        			$error_message = $form_settings['block_message'];
+        			add_filter('gform_validation_message', function ($message, $form) use ($error_message) {
+        				return '<div class="validation_error">'.$error_message.'.</div>';
+        			}, 9999, 2);
+        		}
+        	}
+        	return $validation_result;
         }
 
         public function check_for_failed_submission($validation_result) {
