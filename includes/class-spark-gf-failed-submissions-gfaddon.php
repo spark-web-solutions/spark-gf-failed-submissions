@@ -647,12 +647,12 @@ if (class_exists('GFForms')) {
 						$column_headings .= '				<th style="" class="manage-column" id="ip" scope="col">'.__('IP Address', 'spark-gf-failed-submissions').'</th>'."\n";
 						$column_headings .= '			</tr>'."\n";
 
+						$current = isset($_REQUEST['paged']) ? absint($_REQUEST['paged']) : 1;
 						$total_count = 0;
 						$limit = 20;
-						$offset = 0;
+						$offset = $limit*($current-1);
 						$failed_submissions = Spark_Gf_Failed_Submissions_Api::get_submissions($form_id, $limit, $offset, $total_count);
-						$total_pages = ceil($total_count / $limit);
-						$current = isset($_REQUEST['paged']) ? absint($_REQUEST['paged']) : 1;
+						$total_pages = ceil($total_count/$limit);
 						if ($current > $total_pages) {
 							$current = $total_pages;
 						}
@@ -668,6 +668,7 @@ if (class_exists('GFForms')) {
 						echo '			<span class="displaying-num">'.sprintf(_n('%d item', '%d items', $total_count, 'spark-gf-failed-submissions'), number_format_i18n($total_count)).'</span>'."\n";
 
 						$current_url = '//'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+						$current_url = remove_query_arg(array('action', '_wpnonce', 'sid'), $current_url);
 
 						$page_links = array();
 
@@ -730,7 +731,7 @@ if (class_exists('GFForms')) {
 						echo '		</thead>'."\n";
 						echo '		<tbody id="the-list">'."\n";
 						if (empty($failed_submissions)) {
-							echo '<tr class="no-items"><td class="colspanchange" colspan="4">'.__('This form does not have any failed submissions yet.', 'spark-gf-failed-submissions').'</td></tr>'."\n";
+							echo '<tr class="no-items"><td class="colspanchange" colspan="5">'.__('This form does not have any failed submissions yet.', 'spark-gf-failed-submissions').'</td></tr>'."\n";
 						} else {
 							foreach ($failed_submissions as $failed_submission) {
 								$submission_date = get_date_from_gmt($failed_submission->date_created_gmt, get_option('date_format').' '.get_option('time_format'));

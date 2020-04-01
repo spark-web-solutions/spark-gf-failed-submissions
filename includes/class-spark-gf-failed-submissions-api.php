@@ -53,11 +53,10 @@ class Spark_Gf_Failed_Submissions_Api {
             $offset = absint($offset);
             $query = $wpdb->prepare('SELECT * FROM '.$wpdb->spark_gf_failed_submissions.' WHERE form_id = %d ORDER BY date_created_gmt DESC LIMIT '.$offset.', '.$limit, $form_id);
             $results = $wpdb->get_results($query);
-            $total_count = count($results);
-            if ($total_count == $limit) { // If we've returned the maximum number of records, do a count to see how many there are in total
-            	$query = $wpdb->prepare('SELECT count(id) FROM '.$wpdb->spark_gf_failed_submissions.' WHERE form_id = %d', $form_id);
-            	$total_count = $wpdb->get_var($query);
-            }
+
+            $query = $wpdb->prepare('SELECT count(id) FROM '.$wpdb->spark_gf_failed_submissions.' WHERE form_id = %d', $form_id);
+            $total_count = $wpdb->get_var($query);
+
             return $results;
         }
         return false;
