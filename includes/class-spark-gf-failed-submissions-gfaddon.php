@@ -647,12 +647,12 @@ if (class_exists('GFForms')) {
 						$limit = 20;
 						$offset = 0;
 						$failed_submissions = Spark_Gf_Failed_Submissions_Api::get_submissions($form_id, $limit, $offset, $total_count);
-						$total_pages = ceil($total_count/$limit);
+						$total_pages = ceil($total_count / $limit);
 						$current = isset($_REQUEST['paged']) ? absint($_REQUEST['paged']) : 1;
 						if ($current > $total_pages) {
 							$current = $total_pages;
 						}
-						if ( $total_pages ) {
+						if ($total_pages) {
 							$page_class = $total_pages < 2 ? ' one-page' : '';
 						} else {
 							$page_class = ' no-pages';
@@ -668,75 +668,55 @@ if (class_exists('GFForms')) {
 						$page_links = array();
 
 						$total_pages_before = '<span class="paging-input">';
-						$total_pages_after  = '</span></span>';
+						$total_pages_after = '</span></span>';
 
 						$disable_first = $disable_last = $disable_prev = $disable_next = false;
 
-						if ( $current == 1 ) {
+						if ($current == 1) {
 							$disable_first = true;
 							$disable_prev = true;
 						}
-						if ( $current == 2 ) {
+						if ($current == 2) {
 							$disable_first = true;
 						}
-						if ( $current == $total_pages ) {
+						if ($current == $total_pages) {
 							$disable_last = true;
 							$disable_next = true;
 						}
-						if ( $current == $total_pages - 1 ) {
+						if ($current == $total_pages - 1) {
 							$disable_last = true;
 						}
 
-						if ( $disable_first ) {
+						if ($disable_first) {
 							$page_links[] = '<span class="tablenav-pages-navspan button disabled" aria-hidden="true">&laquo;</span>';
 						} else {
-							$page_links[] = sprintf( "<a class='first-page button' href='%s'><span class='screen-reader-text'>%s</span><span aria-hidden='true'>%s</span></a>",
-									esc_url( remove_query_arg( 'paged', $current_url ) ),
-									__( 'First page' ),
-									'&laquo;'
-									);
+							$page_links[] = sprintf("<a class='first-page button' href='%s'><span class='screen-reader-text'>%s</span><span aria-hidden='true'>%s</span></a>", esc_url(remove_query_arg('paged', $current_url)), __('First page'), '&laquo;');
 						}
 
-						if ( $disable_prev ) {
+						if ($disable_prev) {
 							$page_links[] = '<span class="tablenav-pages-navspan button disabled" aria-hidden="true">&lsaquo;</span>';
 						} else {
-							$page_links[] = sprintf( "<a class='prev-page button' href='%s'><span class='screen-reader-text'>%s</span><span aria-hidden='true'>%s</span></a>",
-									esc_url( add_query_arg( 'paged', max( 1, $current-1 ), $current_url ) ),
-									__( 'Previous page' ),
-									'&lsaquo;'
-									);
+							$page_links[] = sprintf("<a class='prev-page button' href='%s'><span class='screen-reader-text'>%s</span><span aria-hidden='true'>%s</span></a>", esc_url(add_query_arg('paged', max(1, $current - 1), $current_url)), __('Previous page'), '&lsaquo;');
 						}
 
-						$html_current_page = sprintf( "%s<input class='current-page' id='current-page-selector' type='text' name='paged' value='%s' size='%d' aria-describedby='table-paging' /><span class='tablenav-paging-text'>",
-								'<label for="current-page-selector" class="screen-reader-text">' . __( 'Current Page' ) . '</label>',
-								$current,
-								strlen( $total_pages )
-								);
-						$html_total_pages = sprintf( "<span class='total-pages'>%s</span>", number_format_i18n( $total_pages ) );
-						$page_links[] = $total_pages_before . sprintf( _x( '%1$s of %2$s', 'paging' ), $html_current_page, $html_total_pages ) . $total_pages_after;
+						$html_current_page = sprintf("%s<input class='current-page' id='current-page-selector' type='text' name='paged' value='%s' size='%d' aria-describedby='table-paging' /><span class='tablenav-paging-text'>", '<label for="current-page-selector" class="screen-reader-text">'.__('Current Page').'</label>', $current, strlen($total_pages));
+						$html_total_pages = sprintf("<span class='total-pages'>%s</span>", number_format_i18n($total_pages));
+						$page_links[] = $total_pages_before . sprintf(_x('%1$s of %2$s', 'paging'), $html_current_page, $html_total_pages).$total_pages_after;
 
-						if ( $disable_next ) {
+						if ($disable_next) {
 							$page_links[] = '<span class="tablenav-pages-navspan button disabled" aria-hidden="true">&rsaquo;</span>';
 						} else {
-							$page_links[] = sprintf( "<a class='next-page button' href='%s'><span class='screen-reader-text'>%s</span><span aria-hidden='true'>%s</span></a>",
-									esc_url( add_query_arg( 'paged', min( $total_pages, $current+1 ), $current_url ) ),
-									__( 'Next page' ),
-									'&rsaquo;'
-									);
+							$page_links[] = sprintf("<a class='next-page button' href='%s'><span class='screen-reader-text'>%s</span><span aria-hidden='true'>%s</span></a>", esc_url(add_query_arg('paged', min($total_pages, $current + 1), $current_url)), __('Next page'), '&rsaquo;');
 						}
 
-						if ( $disable_last ) {
+						if ($disable_last) {
 							$page_links[] = '<span class="tablenav-pages-navspan button disabled" aria-hidden="true">&raquo;</span>';
 						} else {
-							$page_links[] = sprintf( "<a class='last-page button' href='%s'><span class='screen-reader-text'>%s</span><span aria-hidden='true'>%s</span></a>",
-									esc_url( add_query_arg( 'paged', $total_pages, $current_url ) ),
-									__( 'Last page' ),
-									'&raquo;'
-									);
+							$page_links[] = sprintf("<a class='last-page button' href='%s'><span class='screen-reader-text'>%s</span><span aria-hidden='true'>%s</span></a>", esc_url(add_query_arg('paged', $total_pages, $current_url)), __('Last page'), '&raquo;');
 						}
 
 						$pagination_links_class = 'pagination-links';
-						echo "\n<span class='$pagination_links_class'>" . join( "\n", $page_links ) . '</span>';
+						echo "\n<span class='$pagination_links_class'>".implode("\n", $page_links).'</span>';
 
 						echo '		</div>'."\n";
 						echo '	</div>'."\n";
@@ -757,7 +737,7 @@ if (class_exists('GFForms')) {
 									$user_details = $failed_submission->email;
 								}
 								echo '			<tr class="type-page status-publish hentry iedit author-other level-0" id="lineitem-'.$failed_submission->id.'">'."\n";
-								echo '				<td class=""><a href="'.$this->generate_submission_detail_link($failed_submission->id).'">'.$failed_submission->id.'</a></td>'."\n";
+								echo '				<td class=""><a href="'.$this->generate_submission_detail_link($failed_submission->id).'">' . $failed_submission->id.'</a></td>'."\n";
 								echo '				<td class="date">'.$submission_date.'</td>'."\n";
 								echo '				<td class="">'.$user_details.'</td>'."\n";
 								echo '				<td class="">'.$failed_submission->validation_message.'</td>'."\n";
