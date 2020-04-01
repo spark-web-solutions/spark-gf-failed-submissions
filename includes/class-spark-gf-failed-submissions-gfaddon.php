@@ -653,9 +653,6 @@ if (class_exists('GFForms')) {
 						$offset = $limit*($current-1);
 						$failed_submissions = Spark_Gf_Failed_Submissions_Api::get_submissions($form_id, $limit, $offset, $total_count);
 						$total_pages = ceil($total_count/$limit);
-						if ($current > $total_pages) {
-							$current = $total_pages;
-						}
 						if ($total_pages) {
 							$page_class = $total_pages < 2 ? ' one-page' : '';
 						} else {
@@ -678,18 +675,16 @@ if (class_exists('GFForms')) {
 						$disable_first = $disable_last = $disable_prev = $disable_next = false;
 
 						if ($current == 1) {
-							$disable_first = true;
 							$disable_prev = true;
 						}
-						if ($current == 2) {
+						if ($current <= 2) {
 							$disable_first = true;
 						}
-						if ($current == $total_pages) {
+						if ($current >= $total_pages - 1) {
 							$disable_last = true;
-							$disable_next = true;
 						}
-						if ($current == $total_pages - 1) {
-							$disable_last = true;
+						if ($current >= $total_pages) {
+							$disable_next = true;
 						}
 
 						if ($disable_first) {
