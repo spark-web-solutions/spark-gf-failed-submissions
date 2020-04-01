@@ -497,7 +497,11 @@ if (class_exists('GFForms')) {
 					if (wp_verify_nonce($_GET['_wpnonce'], $this->get_slug())) {
 						switch ($_GET['action']) {
 							case 'delete':
-								$ids = array_map('absint', explode(',', $_GET['sid']));
+								$ids = $_GET['sid'];
+								if (!is_array($ids)) {
+									$ids = array($ids);
+								}
+								$ids = array_map('absint', $ids);
 								$result = Spark_Gf_Failed_Submissions_Api::delete_submissions($ids);
 								if (false === $result) {
 									echo '<div class="notice notice-error"><p>'.__('An error occured while attempting to delete the selected record(s). Please try again.', 'spark-gf-failed-submissions').'</p></div>';
@@ -505,7 +509,7 @@ if (class_exists('GFForms')) {
 									echo '<div class="notice notice-warning"><p>'.__('No records were deleted. Please try again.', 'spark-gf-failed-submissions').'</p></div>';
 								} else {
 									/* translators: %d: Number of records deleted. */
-									echo '<div class="notice notice-success"><p>'.sprintf(__('%d records deleted successfully.', 'spark-gf-failed-submissions'), $result).'</p></div>';
+									echo '<div class="notice notice-success"><p>'.sprintf(_n('%d record deleted successfully.', '%d records deleted successfully.', $result, 'spark-gf-failed-submissions'), number_format_i18n($result)).'</p></div>';
 								}
 								break;
 						}
@@ -737,7 +741,14 @@ if (class_exists('GFForms')) {
 									$user_details = $failed_submission->email;
 								}
 								echo '			<tr class="type-page status-publish hentry iedit author-other level-0" id="lineitem-'.$failed_submission->id.'">'."\n";
-								echo '				<td class=""><a href="'.$this->generate_submission_detail_link($failed_submission->id).'">' . $failed_submission->id.'</a></td>'."\n";
+								echo '				<td class="has-row-actions">';
+								echo '					<a href="'.$this->generate_submission_detail_link($failed_submission->id).'">' . $failed_submission->id.'</a>';
+								echo '					<div class="row-actions">';
+								echo '						<span class="delete">';
+								echo '	                        <a href="'.$this->generate_submission_delete_link($failed_submission->id, $nonce).'">'.__('Delete').'</a>';
+								echo '	                    </span>';
+								echo '					</div>';
+								echo '				</td>'."\n";
 								echo '				<td class="date">'.$submission_date.'</td>'."\n";
 								echo '				<td class="">'.$user_details.'</td>'."\n";
 								echo '				<td class="">'.$failed_submission->validation_message.'</td>'."\n";
