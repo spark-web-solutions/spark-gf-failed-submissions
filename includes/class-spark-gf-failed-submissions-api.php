@@ -35,16 +35,29 @@ class Spark_Gf_Failed_Submissions_Api {
 
     /**
      * Get failed submissions for the selected form
-     * @param integer $form_id
+     * @param integer $form_id Form to retrieve failed submissions for
+     * @param integer $limit Optional. Number of items to retrieve. Default 20, maximum 200.
+     * @param integer $offset Optional. Number of items to skip. Default 0.
      * @return array|boolean Array of failed submission objects or false if form doesn't exist
      * @since 1.0.0
+     * @version 1.2.0 Added $limit and $offset parameters
      */
-    public static function get_submissions($form_id) {
+    public static function get_submissions($form_id, $limit = 20, $offset = 0, &$total_count = null) {
         $form_id = (int)$form_id;
         if (GFAPI::form_id_exists($form_id)) {
             global $wpdb;
-            $query = $wpdb->prepare('SELECT * FROM '.$wpdb->spark_gf_failed_submissions.' WHERE form_id = %d ORDER BY date_created_gmt DESC', $form_id);
+            $limit = absint($limit);
+            if ($limit > 200) { // Restrict to a sensible maximum
+            	$limit = 200;
+            }
+            $offset = absint($offset);
+            $query = $wpdb->prepare('SELECT * FROM '.$wpdb->spark_gf_failed_submissions.' WHERE form_id = %d ORDER BY date_created_gmt DESC LIMIT '.$offset.', '.$limit, $form_id);
             $results = $wpdb->get_results($query);
+            $total_count = count($results);
+            if ($total_count == $limit) { // If we've returned the maximum number of records, do a count to see how many there are in total
+            	$query = $wpdb->prepare('SELECT count(id) FROM '.$wpdb->spark_gf_failed_submissions.' WHERE form_id = %d', $form_id);
+            	$total_count = $wpdb->get_var($query);
+            }
             return $results;
         }
         return false;
@@ -52,7 +65,7 @@ class Spark_Gf_Failed_Submissions_Api {
 
     /**
      * Get a single submission record
-     * @param integer $submittion_id
+     * @param integer $submission_id Failed submission to retrieve
      * @return object|null Submission record or null if doesn't exist
      * @since 1.1.0
      */
@@ -65,7 +78,7 @@ class Spark_Gf_Failed_Submissions_Api {
 
     /**
      * Get field details for selected submission
-     * @param integer $submittion_id
+     * @param integer $submission_id Failed submission to retrieve details for
      * @return array|null Array of field objects or null on error
      * @since 1.1.0
      */
@@ -102,7 +115,7 @@ class Spark_Gf_Failed_Submissions_Api {
 
     /**
      * Remove a single submission record from the database
-     * @param integer $submission_id
+     * @param integer $submission_id ID of record to delete
      * @return integer|boolean Number of submission records deleted or false on error
      * @since 1.2.0
      */
@@ -117,7 +130,7 @@ class Spark_Gf_Failed_Submissions_Api {
 
     /**
      * Remove multiple submission records from the database
-     * @param array $submission_ids
+     * @param array $submission_ids List of IDs of records to delete
      * @return integer|boolean Number of submission records deleted or false on error
      * @since 1.2.0
      */
