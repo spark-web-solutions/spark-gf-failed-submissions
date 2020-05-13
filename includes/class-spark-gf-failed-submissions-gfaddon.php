@@ -640,11 +640,12 @@ if (class_exists('GFForms')) {
 						break;
 					case 'submission_list':
 						$column_headings  = '			<tr>'."\n";
-						$column_headings .= '				<th style="" class="manage-column column-primary" id="id" scope="col">'.__('Submission ID', 'spark-gf-failed-submissions').'</th>'."\n";
-						$column_headings .= '				<th style="" class="manage-column column-date" id="date" scope="col">'.__('Date', 'spark-gf-failed-submissions').'</th>'."\n";
-						$column_headings .= '				<th style="" class="manage-column" id="user" scope="col">'.__('Submitted By', 'spark-gf-failed-submissions').'</th>'."\n";
-						$column_headings .= '				<th style="" class="manage-column" id="message" scope="col">'.__('Error Message', 'spark-gf-failed-submissions').'</th>'."\n";
-						$column_headings .= '				<th style="" class="manage-column" id="ip" scope="col">'.__('IP Address', 'spark-gf-failed-submissions').'</th>'."\n";
+						$column_headings .= '				<td class="manage-column column-cb check-column" id="cb"><label class="screen-reader-text" for="cb-select-all-1">'.__('Select All', 'spark-gf-failed-submissions').'</label><input id="cb-select-all-1" type="checkbox"></td>'."\n";
+						$column_headings .= '				<th class="manage-column column-primary" id="id" scope="col">'.__('Submission ID', 'spark-gf-failed-submissions').'</th>'."\n";
+						$column_headings .= '				<th class="manage-column column-date" id="date" scope="col">'.__('Date', 'spark-gf-failed-submissions').'</th>'."\n";
+						$column_headings .= '				<th class="manage-column" id="user" scope="col">'.__('Submitted By', 'spark-gf-failed-submissions').'</th>'."\n";
+						$column_headings .= '				<th class="manage-column" id="message" scope="col">'.__('Error Message', 'spark-gf-failed-submissions').'</th>'."\n";
+						$column_headings .= '				<th class="manage-column" id="ip" scope="col">'.__('IP Address', 'spark-gf-failed-submissions').'</th>'."\n";
 						$column_headings .= '			</tr>'."\n";
 
 						$current = isset($_REQUEST['paged']) ? absint($_REQUEST['paged']) : 1;
@@ -659,7 +660,21 @@ if (class_exists('GFForms')) {
 							$page_class = ' no-pages';
 						}
 
+						echo '<form id="failed-submissions-filter" method="get">'."\n";
+						echo '	<input type="hidden" name="page" value="'.$_GET['page'].'">'."\n";
+						echo '	<input type="hidden" name="id" value="'.$form_id.'">'."\n";
+						echo '	<input type="hidden" name="paged" value="'.$current.'">'."\n";
+						echo '	<input type="hidden" name="_wpnonce" value="'.$nonce.'">'."\n";
 						echo '	<div class="tablenav top">'."\n";
+						echo '		<div class="alignleft actions bulkactions">'."\n";
+						echo '			<label for="bulk-action-selector-top" class="screen-reader-text">Select bulk action</label>'."\n";
+						echo '			<select name="action" id="bulk-action-selector-top">'."\n";
+						echo '				<option value="-1">Bulk Actions</option>'."\n";
+						echo '				<option value="delete">Delete</option>'."\n";
+						echo '			</select>'."\n";
+						/* Translators: "Apply" refers to applying a bulk action to the selected records */
+						echo '			<input id="doaction" class="button action" value="'.__('Apply', 'spark-gf-failed-submissions').'" type="submit">'."\n";
+						echo '		</div>'."\n";
 						echo '		<div class="tablenav-pages'.$page_class.'">'."\n";
 						/* Translators: %d = number of items */
 						echo '			<span class="displaying-num">'.sprintf(_n('%d item', '%d items', $total_count, 'spark-gf-failed-submissions'), number_format_i18n($total_count)).'</span>'."\n";
@@ -726,7 +741,7 @@ if (class_exists('GFForms')) {
 						echo '		</thead>'."\n";
 						echo '		<tbody id="the-list">'."\n";
 						if (empty($failed_submissions)) {
-							echo '<tr class="no-items"><td class="colspanchange" colspan="5">'.__('This form does not have any failed submissions yet.', 'spark-gf-failed-submissions').'</td></tr>'."\n";
+							echo '<tr class="no-items"><td class="colspanchange" colspan="6">'.__('This form does not have any failed submissions yet.', 'spark-gf-failed-submissions').'</td></tr>'."\n";
 						} else {
 							foreach ($failed_submissions as $failed_submission) {
 								$submission_date = get_date_from_gmt($failed_submission->date_created_gmt, get_option('date_format').' '.get_option('time_format'));
@@ -737,6 +752,11 @@ if (class_exists('GFForms')) {
 									$user_details = $failed_submission->email;
 								}
 								echo '			<tr class="type-page status-publish hentry iedit author-other level-0" id="lineitem-'.$failed_submission->id.'">'."\n";
+								echo '				<th scope="row" class="check-column">';
+								/* translators: %d: ID of the failed submission record */
+								echo '					<label class="screen-reader-text" for="cb-select-'.$failed_submission->id.'">'.sprintf(__('Select Submission %d', 'spark-gf-failed-submissions'), $failed_submission->id).'</label>';
+								echo '					<input id="cb-select-'.$failed_submission->id.'" type="checkbox" name="sid[]" value="'.$failed_submission->id.'">';
+								echo '				</th>'."\n";
 								echo '				<td class="has-row-actions">';
 								echo '					<a href="'.$this->generate_submission_detail_link($failed_submission->id).'">' . $failed_submission->id.'</a>';
 								echo '					<div class="row-actions">';
@@ -757,6 +777,7 @@ if (class_exists('GFForms')) {
 						echo $column_headings;
 						echo '		</tfoot>'."\n";
 						echo '	</table>'."\n";
+						echo '</form>'."\n";
 ?>
 	<script>
 		jQuery(document).ready(function() {
