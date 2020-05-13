@@ -6,7 +6,7 @@ msgstr ""
 "Spark GF Failed "
 "Submissions 1.1.1\n"
 "POT-Creation-Date: "
-"2019-12-05 09:24+1100\n"
+"2020-05-13 12:33+1000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Spark "
 "Web Solutions "
@@ -52,10 +52,10 @@ msgstr ""
 "X-Poedit-"
 "SearchPath-0: .\n"
 
-#: includes/class-spark-gf-failed-submissions-activator.php:29
-#: includes/class-spark-gf-failed-submissions-api.php:31
-#: includes/class-spark-gf-failed-submissions-db.php:30
-#: includes/class-spark-gf-failed-submissions-deactivator.php:30
+#: includes/class-spark-gf-failed-submissions-activator.php:30
+#: includes/class-spark-gf-failed-submissions-api.php:32
+#: includes/class-spark-gf-failed-submissions-db.php:31
+#: includes/class-spark-gf-failed-submissions-deactivator.php:31
 #, php-format
 msgid ""
 "%s cannot be "
@@ -70,13 +70,18 @@ msgid ""
 msgstr ""
 
 #: includes/class-spark-gf-failed-submissions-gfaddon.php:46
-#: includes/class-spark-gf-failed-submissions-gfaddon.php:104
-#: includes/class-spark-gf-failed-submissions-gfaddon.php:381
-#: includes/class-spark-gf-failed-submissions-gfaddon.php:393
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:105
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:459
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:471
 msgid "Failed Submissions"
 msgstr ""
 
-#: includes/class-spark-gf-failed-submissions-gfaddon.php:105
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:108
+msgid ""
+"Failure Notifications"
+msgstr ""
+
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:109
 msgid ""
 "Use these settings to "
 "override the global per-"
@@ -101,7 +106,7 @@ msgid ""
 "site-wide notifications."
 msgstr ""
 
-#: includes/class-spark-gf-failed-submissions-gfaddon.php:109
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:113
 #, php-format
 msgid ""
 "Enter the number of "
@@ -116,13 +121,14 @@ msgid ""
 "form."
 msgstr ""
 
-#: includes/class-spark-gf-failed-submissions-gfaddon.php:110
-#: includes/class-spark-gf-failed-submissions-gfaddon.php:139
-#: includes/class-spark-gf-failed-submissions-gfaddon.php:161
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:114
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:138
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:185
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:207
 msgid "Failure Threshold"
 msgstr ""
 
-#: includes/class-spark-gf-failed-submissions-gfaddon.php:118
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:122
 #, php-format
 msgid ""
 "Enter the length of time "
@@ -136,18 +142,77 @@ msgid ""
 "for this form."
 msgstr ""
 
-#: includes/class-spark-gf-failed-submissions-gfaddon.php:119
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:123
 #: includes/class-spark-gf-failed-submissions-gfaddon.php:147
-#: includes/class-spark-gf-failed-submissions-gfaddon.php:169
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:193
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:215
 msgid "Timeframe"
+msgstr ""
+
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:132
+msgid "Submission Blocking"
 msgstr ""
 
 #: includes/class-spark-gf-failed-submissions-gfaddon.php:133
 msgid ""
+"These settings allow you "
+"to temporarily prevent "
+"further submissions "
+"following repeated "
+"failures by the same "
+"user."
+msgstr ""
+
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:137
+msgid ""
+"Enter the number of "
+"failed submissions "
+"required on this form "
+"before a user is "
+"blocked. Leave blank or "
+"set to zero to disable "
+"blocking for this form."
+msgstr ""
+
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:146
+msgid ""
+"Enter the length of time "
+"(in minutes) that failed "
+"submissions are included "
+"in the check. Leave "
+"blank or set to zero to "
+"disable blocking for "
+"this form."
+msgstr ""
+
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:165
+msgid ""
+"Enter the error message "
+"displayed to users when "
+"they have been blocked "
+"due to failed "
+"submissions."
+msgstr ""
+
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:166
+msgid "Message Text"
+msgstr ""
+
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:169
+msgid ""
+"Too many failed "
+"submissions detected. "
+"Please wait a few "
+"minutes before trying "
+"again."
+msgstr ""
+
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:179
+msgid ""
 "Site-Wide Notifications"
 msgstr ""
 
-#: includes/class-spark-gf-failed-submissions-gfaddon.php:134
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:180
 msgid ""
 "These settings define "
 "when notifications will "
@@ -160,7 +225,7 @@ msgid ""
 "disabled."
 msgstr ""
 
-#: includes/class-spark-gf-failed-submissions-gfaddon.php:138
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:184
 msgid ""
 "Enter the number of "
 "failed submissions "
@@ -169,8 +234,8 @@ msgid ""
 "notification"
 msgstr ""
 
-#: includes/class-spark-gf-failed-submissions-gfaddon.php:146
-#: includes/class-spark-gf-failed-submissions-gfaddon.php:168
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:192
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:214
 msgid ""
 "Enter the length of time "
 "(in minutes) that failed "
@@ -178,12 +243,12 @@ msgid ""
 "in the check"
 msgstr ""
 
-#: includes/class-spark-gf-failed-submissions-gfaddon.php:155
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:201
 msgid ""
 "Per-Form Notifications"
 msgstr ""
 
-#: includes/class-spark-gf-failed-submissions-gfaddon.php:156
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:202
 msgid ""
 "These settings define "
 "when notifications will "
@@ -199,7 +264,7 @@ msgid ""
 "settings."
 msgstr ""
 
-#: includes/class-spark-gf-failed-submissions-gfaddon.php:160
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:206
 msgid ""
 "Enter the number of "
 "failed submissions "
@@ -208,11 +273,11 @@ msgid ""
 "trigger a notification"
 msgstr ""
 
-#: includes/class-spark-gf-failed-submissions-gfaddon.php:177
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:223
 msgid "General Settings"
 msgstr ""
 
-#: includes/class-spark-gf-failed-submissions-gfaddon.php:181
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:227
 msgid ""
 "Enter the email address "
 "to receive "
@@ -222,12 +287,12 @@ msgid ""
 "commas."
 msgstr ""
 
-#: includes/class-spark-gf-failed-submissions-gfaddon.php:182
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:228
 msgid ""
 "Send Notifications To"
 msgstr ""
 
-#: includes/class-spark-gf-failed-submissions-gfaddon.php:191
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:237
 msgid ""
 "Enter the length of time "
 "(in minutes) that the "
@@ -237,33 +302,33 @@ msgid ""
 "set to 5 (default) it "
 "will send no more than "
 "one email every 5 "
-"mintues."
+"minutes."
 msgstr ""
 
-#: includes/class-spark-gf-failed-submissions-gfaddon.php:192
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:238
 msgid ""
 "Interval Between Emails"
 msgstr ""
 
-#: includes/class-spark-gf-failed-submissions-gfaddon.php:246
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:324
 msgid ""
 "There was a problem with "
 "your submission."
 msgstr ""
 
-#: includes/class-spark-gf-failed-submissions-gfaddon.php:246
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:324
 msgid ""
 "Errors have been "
 "highlighted below."
 msgstr ""
 
-#: includes/class-spark-gf-failed-submissions-gfaddon.php:382
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:460
 msgid ""
 "View failed submissions "
 "for this form"
 msgstr ""
 
-#: includes/class-spark-gf-failed-submissions-gfaddon.php:407
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:487
 #, php-format
 msgid ""
 "You don't have any "
@@ -271,84 +336,172 @@ msgid ""
 "%screate one%s"
 msgstr ""
 
-#: includes/class-spark-gf-failed-submissions-gfaddon.php:457
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:507
+msgid ""
+"An error occured while "
+"attempting to delete the "
+"selected record(s). "
+"Please try again."
+msgstr ""
+
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:509
+msgid ""
+"No records were deleted. "
+"Please try again."
+msgstr ""
+
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:512
+#, php-format
+msgid ""
+"%d record deleted "
+"successfully."
+msgid_plural ""
+"%d records deleted "
+"successfully."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:518
+#, php-format
+msgid ""
+"Invalid action. Please "
+"%sreload the page%s and "
+"try again."
+msgstr ""
+
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:565
 #, php-format
 msgid ""
 "Failed Submission # %d"
 msgstr ""
 
-#: includes/class-spark-gf-failed-submissions-gfaddon.php:495
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:605
 msgid "Failed Submission"
 msgstr ""
 
-#: includes/class-spark-gf-failed-submissions-gfaddon.php:499
-#: includes/class-spark-gf-failed-submissions-gfaddon.php:527
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:609
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:644
 msgid "Submission ID"
 msgstr ""
 
-#: includes/class-spark-gf-failed-submissions-gfaddon.php:500
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:610
 msgid "Submitted on"
 msgstr ""
 
-#: includes/class-spark-gf-failed-submissions-gfaddon.php:501
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:611
 msgid "User IP"
 msgstr ""
 
-#: includes/class-spark-gf-failed-submissions-gfaddon.php:511
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:621
 msgid "User"
 msgstr ""
 
-#: includes/class-spark-gf-failed-submissions-gfaddon.php:528
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:628
+msgid "Delete Permanently"
+msgstr ""
+
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:643
+msgid "Select All"
+msgstr ""
+
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:645
 msgid "Date"
 msgstr ""
 
-#: includes/class-spark-gf-failed-submissions-gfaddon.php:529
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:646
 msgid "Submitted By"
 msgstr ""
 
-#: includes/class-spark-gf-failed-submissions-gfaddon.php:530
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:647
 msgid "Error Message"
 msgstr ""
 
-#: includes/class-spark-gf-failed-submissions-gfaddon.php:531
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:648
 msgid "IP Address"
 msgstr ""
 
-#: includes/class-spark-gf-failed-submissions-gfaddon.php:542
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:676
+msgid "Apply"
+msgstr ""
+
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:680
+#, php-format
+msgid "%d item"
+msgid_plural "%d items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:708
+msgid "First page"
+msgstr ""
+
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:714
+msgid "Previous page"
+msgstr ""
+
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:717
+msgid "Current Page"
+msgstr ""
+
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:719
+#, php-format
+msgctxt "paging"
+msgid "%1$s of %2$s"
+msgstr ""
+
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:724
+msgid "Next page"
+msgstr ""
+
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:730
+msgid "Last page"
+msgstr ""
+
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:744
 msgid ""
 "This form does not have "
 "any failed submissions "
 "yet."
 msgstr ""
 
-#: includes/class-spark-gf-failed-submissions-gfaddon.php:586
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:757
+#, php-format
+msgid ""
+"Select Submission %d"
+msgstr ""
+
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:764
+msgid "Delete"
+msgstr ""
+
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:815
 msgid ""
 "Must be an integer "
 "greater than or equal to "
 "zero"
 msgstr ""
 
-#: includes/class-spark-gf-failed-submissions-gfaddon.php:594
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:823
 msgid ""
 "Invalid email address"
 msgstr ""
 
-#: includes/class-spark-gf-failed-submissions-gfaddon.php:600
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:829
 msgid ""
 "Site-wide failed "
 "submissions threshold "
 "reached"
 msgstr ""
 
-#: includes/class-spark-gf-failed-submissions-gfaddon.php:601
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:831
 #, php-format
 msgid ""
-"%d form submissions have "
-"failed in the last %d "
-"minutes on %s"
+"%1$d form submissions "
+"have failed in the last "
+"%2$d minutes on %3$s"
 msgstr ""
 
-#: includes/class-spark-gf-failed-submissions-gfaddon.php:606
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:837
 #, php-format
 msgid ""
 "Failed submissions "
@@ -356,11 +509,11 @@ msgid ""
 "form: %s"
 msgstr ""
 
-#: includes/class-spark-gf-failed-submissions-gfaddon.php:607
+#: includes/class-spark-gf-failed-submissions-gfaddon.php:839
 #, php-format
 msgid ""
-"%d form submissions have "
-"failed in the last %d "
-"minutes on %s for the "
-"form \"%s\""
+"%1$d form submissions "
+"have failed in the last "
+"%2$d minutes on %3$s for "
+"the form \"%4$s\""
 msgstr ""
