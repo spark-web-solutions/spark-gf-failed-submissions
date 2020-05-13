@@ -291,7 +291,7 @@ if (class_exists('GFForms')) {
 					$validation_result['is_valid'] = false;
 					$error_message = $form_settings['block_message'];
 					add_filter('gform_validation_message', function ($message, $form) use ($error_message) {
-						return '<div class="validation_error">'.$error_message.'.</div>';
+						return '<div class="validation_error">'.$error_message.'</div>';
 					}, 9999, 2);
 				}
 			}
