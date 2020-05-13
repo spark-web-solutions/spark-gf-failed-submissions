@@ -40,16 +40,22 @@ Once installed, you'll want to make sure the plugin is set up to best meet your 
 == Changelog ==
 
 = 1.1.1 =
+4th December 2019
+
 * Fixed display of submitted values for complex fields
 * Fixed PHP warnings when no specific form settings have been configured
 
 = 1.1.0 =
+25th February 2019
+
 * New setting to limit emails to a specified interval
 * New failed submission detail view
 * Fixed issue where GF admin scripts/styles were being enqueued on the front end
 * Fixed capture and display of submitted email address
 
 = 1.0.0 =
+7th September 2018
+
 * Initial release
 
 == Frequently Asked Questions ==
