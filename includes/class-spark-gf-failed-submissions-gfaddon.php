@@ -234,7 +234,7 @@ if (class_exists('GFForms')) {
 									),
 									array(
 											'name'	=> 'email_interval',
-											'tooltip' => __('Enter the length of time (in minutes) that the system should wait between sending failure notifications. E.g. if set to 5 (default) it will send no more than one email every 5 mintues.', 'spark-gf-failed-submissions'),
+											'tooltip' => __('Enter the length of time (in minutes) that the system should wait between sending failure notifications. E.g. if set to 5 (default) it will send no more than one email every 5 minutes.', 'spark-gf-failed-submissions'),
 											'label'   => __('Interval Between Emails', 'spark-gf-failed-submissions'),
 											'type'	=> 'text',
 											'class'   => 'small',
