@@ -584,6 +584,12 @@ if (class_exists('GFForms')) {
 										$field_value = implode('<br>', $value_array);
 										break;
 								}
+							} else {
+								switch ($form_fields[$submission_field->field_id]->type) {
+									case 'password':
+										$field_value = '************';
+										break;
+								}
 							}
 ?>
 						<tr>
