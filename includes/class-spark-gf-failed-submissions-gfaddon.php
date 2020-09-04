@@ -654,11 +654,22 @@ if (class_exists('GFForms')) {
 						$column_headings .= '				<th class="manage-column" id="ip" scope="col">'.__('IP Address', 'spark-gf-failed-submissions').'</th>'."\n";
 						$column_headings .= '			</tr>'."\n";
 
+						$filter_field = $_GET['f'] ?? '';
+						$filter_operator = $_GET['o'] ?? '';
+						$filter_value = $_GET['v'] ?? '';
+						if (!empty($filter_field) && !empty($filter_value)) {
+							$filters = array(
+									$filter_field => array(
+											'value' => $filter_value,
+											'operator' => $filter_operator,
+									),
+							);
+						}
 						$current = isset($_REQUEST['paged']) ? absint($_REQUEST['paged']) : 1;
 						$total_count = 0;
 						$limit = 20;
 						$offset = $limit*($current-1);
-						$failed_submissions = Spark_Gf_Failed_Submissions_Api::get_submissions($form_id, $limit, $offset, $total_count);
+						$failed_submissions = Spark_Gf_Failed_Submissions_Api::get_submissions($form_id, $filters, $limit, $offset, $total_count);
 						$total_pages = ceil($total_count/$limit);
 						if ($total_pages) {
 							$page_class = $total_pages < 2 ? ' one-page' : '';
@@ -666,7 +677,38 @@ if (class_exists('GFForms')) {
 							$page_class = ' no-pages';
 						}
 
-						echo '<form id="failed-submissions-filter" method="get">'."\n";
+						$current_url = '//'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+						$current_url = remove_query_arg(array('action', '_wpnonce', 'sid'), $current_url);
+
+						// Filters
+						echo '<form id="entry_search_container" method="GET" action="'.remove_query_arg(array('f', 'o', 'v'), $current_url).'">'."\n";
+						echo '	<input type="hidden" name="page" value="'.$_GET['page'].'">'."\n";
+						echo '	<input type="hidden" name="id" value="'.$form_id.'">'."\n";
+						echo '	<input type="hidden" name="paged" value="'.$current.'">'."\n";
+						echo '	<input type="hidden" name="_wpnonce" value="'.$nonce.'">'."\n";
+						echo '	<div id="entry_filters" style="position: relative;">'."\n";
+						echo '		<div id="gform-field-filters">'."\n";
+						echo '			<div class="gform-field-filter">'."\n";
+						echo '				<select class="gform-filter-field" name="f">'."\n";
+						echo '					<option value="id" '.selected('id', $filter_field, false).'>'.__('Submission ID', 'spark-gf-failed-submissions').'</option>'."\n";
+						echo '					<option value="validation_message" '.selected('validation_message', $filter_field, false).'>'.__('Error Message', 'spark-gf-failed-submissions').'</option>'."\n";
+						echo '					<option value="user_ip" '.selected('user_ip', $filter_field, false).'>'.__('IP Address', 'spark-gf-failed-submissions').'</option>'."\n";
+						echo '				</select>'."\n";
+						echo '				<select name="o" class="gform-filter-operator">'."\n";
+						/* Translators: "is" refers to filtering records by a field exactly matching the entered text */
+						echo '					<option value="is" '.selected('is', $filter_operator, false).'>'.__('is', 'spark-gf-failed-submissions').'</option>'."\n";
+						/* Translators: "contains" refers to filtering records by a field containing the entered text */
+						echo '					<option value="contains" '.selected('contains', $filter_operator, false).'>'.__('contains', 'spark-gf-failed-submissions').'</option>'."\n";
+						echo '				</select>'."\n";
+						echo '				<input type="text" value="'.esc_attr($filter_value).'" name="v" class="gform-filter-value">'."\n";
+						echo '			</div>'."\n";
+						echo '		</div>'."\n";
+						echo '	</div>'."\n";
+						echo '	<input type="submit" value="Search" class="button">'."\n";
+						echo '</form>'."\n";
+
+						// Bulk actions
+						echo '<form id="failed-submissions-bulk-actions" method="get">'."\n";
 						echo '	<input type="hidden" name="page" value="'.$_GET['page'].'">'."\n";
 						echo '	<input type="hidden" name="id" value="'.$form_id.'">'."\n";
 						echo '	<input type="hidden" name="paged" value="'.$current.'">'."\n";
@@ -685,9 +727,7 @@ if (class_exists('GFForms')) {
 						/* Translators: %d = number of items */
 						echo '			<span class="displaying-num">'.sprintf(_n('%d item', '%d items', $total_count, 'spark-gf-failed-submissions'), number_format_i18n($total_count)).'</span>'."\n";
 
-						$current_url = '//'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-						$current_url = remove_query_arg(array('action', '_wpnonce', 'sid'), $current_url);
-
+						// Pagination
 						$page_links = array();
 
 						$total_pages_before = '<span class="paging-input">';
@@ -741,6 +781,8 @@ if (class_exists('GFForms')) {
 
 						echo '		</div>'."\n";
 						echo '	</div>'."\n";
+
+						// Submission list
 						echo '	<table class="wp-list-table widefat fixed striped">'."\n";
 						echo '		<thead>'."\n";
 						echo $column_headings;

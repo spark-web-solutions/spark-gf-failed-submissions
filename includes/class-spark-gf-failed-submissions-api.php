@@ -36,13 +36,15 @@ class Spark_Gf_Failed_Submissions_Api {
     /**
      * Get failed submissions for the selected form
      * @param integer $form_id Form to retrieve failed submissions for
+     * @param array $filters Optional. Conditions on which to filter results.
      * @param integer $limit Optional. Number of items to retrieve. Default 20, maximum 200.
      * @param integer $offset Optional. Number of items to skip. Default 0.
      * @return array|boolean Array of failed submission objects or false if form doesn't exist
      * @since 1.0.0
-     * @version 1.2.0 Added $limit and $offset parameters
+     * @version 1.2.0 Added $limit, $offset and $total_count parameters
+     * @version 1.3.0 Added $filters parameter
      */
-    public static function get_submissions($form_id, $limit = 20, $offset = 0, &$total_count = null) {
+    public static function get_submissions($form_id, $filters = array(), $limit = 20, $offset = 0, &$total_count = null) {
         $form_id = (int)$form_id;
         if (GFAPI::form_id_exists($form_id)) {
             global $wpdb;
@@ -51,7 +53,28 @@ class Spark_Gf_Failed_Submissions_Api {
             	$limit = 200;
             }
             $offset = absint($offset);
-            $query = $wpdb->prepare('SELECT * FROM '.$wpdb->spark_gf_failed_submissions.' WHERE form_id = %d ORDER BY date_created_gmt DESC LIMIT '.$offset.', '.$limit, $form_id);
+            $query = $wpdb->prepare('SELECT * FROM '.$wpdb->spark_gf_failed_submissions.' WHERE form_id = %d ', $form_id);
+            if (!empty($filters)) {
+            	foreach ($filters as $field => $filter) {
+            		$op = ' = ';
+            		if (is_array($filter)) {
+            			$val = $filter['value'];
+            			if (isset($filter['operator'])) {
+            				switch (strtolower($filter['operator'])) {
+            					case 'like':
+            					case 'contains':
+            						$op = ' LIKE ';
+            						$val = '%'.$val.'%';
+            						break;
+            				}
+            			}
+            		} else {
+            			$val = $filter;
+            		}
+            		$query .= $wpdb->prepare(' AND '.$field.' '.$op.' %s', $val);
+            	}
+            }
+            $query .= ' ORDER BY date_created_gmt DESC LIMIT '.$offset.', '.$limit;
             $results = $wpdb->get_results($query);
 
             $query = $wpdb->prepare('SELECT count(id) FROM '.$wpdb->spark_gf_failed_submissions.' WHERE form_id = %d', $form_id);
