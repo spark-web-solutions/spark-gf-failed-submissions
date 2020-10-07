@@ -66,19 +66,19 @@ if (class_exists('GFForms')) {
 				switch ($this->get_page()) {
 					case 'submission_list':
 						$scripts = array(
-						'wp-lists',
-						'wp-ajax-response',
-						'thickbox',
-						'gform_json',
-						'gform_field_filter',
-						'sack',
+								'wp-lists',
+								'wp-ajax-response',
+								'thickbox',
+								'gform_json',
+								'gform_field_filter',
+								'sack',
 						);
 						break;
 					case 'submission_detail':
 						$scripts = array(
-						'gform_json',
-						'sack',
-						'postbox',
+								'gform_json',
+								'sack',
+								'postbox',
 						);
 						break;
 				}
@@ -520,24 +520,26 @@ if (class_exists('GFForms')) {
 				}
 
 				$form = GFFormsModel::get_form_meta($form_id);
-				echo GFCommon::get_remote_message();
+				if (method_exists('GFForms', 'admin_header')) { // GF >= 2.5
+					GFForms::admin_header();
+				} else { // GF < 2.5
+					echo GFCommon::get_remote_message();
 ?>
-<div class="wrap <?php echo GFCommon::get_browser_class() ?>">
+<div class="wrap <?php echo GFCommon::get_browser_class(); ?>">
 <?php
-				GFCommon::form_page_title($form);
-				GFCommon::display_admin_message();
-				GFCommon::display_dismissible_message();
-				GFForms::top_toolbar();
+					GFCommon::form_page_title($form);
+					GFCommon::display_admin_message();
+					GFCommon::display_dismissible_message();
+					GFForms::top_toolbar();
+				}
 
 				$nonce = wp_create_nonce($this->get_slug());
 
 				switch ($this->get_page()) {
 					case 'submission_detail':
 						$id = (int)$_GET['sid'];
-						$form_id = (int)$_GET['id'];
 						$submission = Spark_Gf_Failed_Submissions_Api::get_submission($id);
 						$submission_fields = Spark_Gf_Failed_Submissions_Api::get_submission_fields($id);
-						$form = GFAPI::get_form($form_id);
 						$form_fields = array();
 						foreach ($form['fields'] as $form_field) {
 							$form_fields[$form_field->id] = $form_field;
@@ -842,9 +844,13 @@ if (class_exists('GFForms')) {
 <?php
 					break;
 				}
+				if (method_exists('GFForms', 'admin_footer')) { // GF >= 2.5
+					GFForms::admin_footer();
+				} else { // GF < 2.5
 ?>
 </div>
 <?php
+				}
 			}
 		}
 
