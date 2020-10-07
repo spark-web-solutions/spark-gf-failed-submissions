@@ -321,7 +321,7 @@ if (class_exists('GFForms')) {
 				}
 
 				// Try and work out the main form validation message
-				$validation_message = strip_tags(gf_apply_filters(array('gform_validation_message', $form['id']), esc_html__('There was a problem with your submission.', 'gravityforms').' '.esc_html__('Errors have been highlighted below.', 'gravityforms'), $form));
+				$validation_message = (string)strip_tags(gf_apply_filters(array('gform_validation_message', $form['id']), esc_html__('There was a problem with your submission.', 'gravityforms').' '.esc_html__('Errors have been highlighted below.', 'gravityforms'), $form));
 
 				// Get datetime object from site timezone
 				$datetime = new DateTime('now', new DateTimeZone($this->wp_get_timezone_string()));
@@ -367,7 +367,7 @@ if (class_exists('GFForms')) {
 				);
 				foreach ($failed_fields as $field) {
 					$field_id = $field->id;
-					$message = $field->validation_message;
+					$message = (string)$field->validation_message;
 					if (!empty($field->inputs)) {
 						$value = array();
 						foreach ($field->inputs as $input) {
