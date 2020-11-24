@@ -40,6 +40,11 @@ It sets what we believe to be sensible defaults, but once installed you'll want 
 
 == Changelog ==
 
+= 1.3.1 =
+25th November 2020
+
+* Updates for compatibility with Gravity Forms 2.5
+
 = 1.3.0 =
 4th September 2020
 
