@@ -454,6 +454,10 @@ if (class_exists('GFForms')) {
 			return $menu_items;
 		}
 
+		public function get_menu_icon() {
+			return 'dashicons-warning';
+		}
+
 		private function get_menu_item($form_id) {
 			return array(
 					'label' => __('Failed Submissions', 'spark-gf-failed-submissions'),
