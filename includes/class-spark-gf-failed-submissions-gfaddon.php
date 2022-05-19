@@ -577,9 +577,16 @@ if (class_exists('GFForms')) {
 <?php
 						foreach ($submission_fields as $submission_field) {
 							$field_value = maybe_unserialize($submission_field->submitted_value);
+							if (array_key_exists($submission_field->field_id, $form_fields)) {
+								$field_type = $form_fields[$submission_field->field_id]->type;
+								$field_label = $form_fields[$submission_field->field_id]->label;
+							} else {
+								$field_type = '';
+								$field_label = __('This field has been deleted', 'spark-gf-failed-submissions');
+							}
 							if (is_array($field_value)) {
 								$value_array = array_filter($field_value);
-								switch ($form_fields[$submission_field->field_id]->type) {
+								switch ($field_type) {
 									case 'name':
 										$field_value = implode(' ', $value_array);
 										break;
@@ -591,7 +598,7 @@ if (class_exists('GFForms')) {
 										break;
 								}
 							} else {
-								switch ($form_fields[$submission_field->field_id]->type) {
+								switch ($field_type) {
 									case 'password':
 										$field_value = '************';
 										break;
@@ -599,7 +606,7 @@ if (class_exists('GFForms')) {
 							}
 ?>
 						<tr>
-							<td colspan="2" class="entry-view-field-name"><?php echo $form_fields[$submission_field->field_id]->label; ?></td>
+							<td colspan="2" class="entry-view-field-name"><?php echo $field_label; ?></td>
 						</tr>
 						<tr>
 							<td class="entry-view-field-value"><?php echo $field_value; ?></td>
