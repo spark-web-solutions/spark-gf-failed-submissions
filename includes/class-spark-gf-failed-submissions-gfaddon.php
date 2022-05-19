@@ -66,17 +66,24 @@ if (class_exists('GFForms')) {
 				switch ($this->get_page()) {
 					case 'submission_list':
 						$scripts = array(
+								'gform_simplebar',
 								'wp-lists',
 								'wp-ajax-response',
 								'thickbox',
 								'gform_json',
 								'gform_field_filter',
+								'gform_form_admin',
+								'gform_gravityforms_admin',
 								'sack',
 						);
 						break;
 					case 'submission_detail':
 						$scripts = array(
+								'gform_simplebar',
+								'gform_gravityforms',
+								'gform_gravityforms_admin',
 								'gform_json',
+								'gform_form_admin',
 								'sack',
 								'postbox',
 						);
@@ -552,7 +559,6 @@ if (class_exists('GFForms')) {
 ?>
 	<script type="text/javascript">
 		jQuery(document).ready(function () {
-			toggleNotificationOverride(true);
 			if (typeof postboxes != 'undefined') {
 				jQuery('.if-js-closed').removeClass('if-js-closed').addClass('closed');
 				postboxes.add_postbox_toggles( <?php echo json_encode($screen->id); ?>);
