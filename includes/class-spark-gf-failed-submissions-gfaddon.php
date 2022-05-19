@@ -828,8 +828,11 @@ if (class_exists('GFForms')) {
 								echo '				<td class="has-row-actions">';
 								echo '					<a href="'.$this->generate_submission_detail_link($failed_submission->id).'">' . $failed_submission->id.'</a>';
 								echo '					<div class="row-actions">';
+								echo '						<span class="view">';
+								echo '	                        <a href="'.$this->generate_submission_detail_link($failed_submission->id).'">'.__('View').'</a>';
+								echo '	                    </span>';
 								echo '						<span class="delete">';
-								echo '	                        <a href="'.$this->generate_submission_delete_link($failed_submission->id, $nonce).'">'.__('Delete').'</a>';
+								echo '	                        | <a href="'.$this->generate_submission_delete_link($failed_submission->id, $nonce).'">'.__('Delete').'</a>';
 								echo '	                    </span>';
 								echo '					</div>';
 								echo '				</td>'."\n";
