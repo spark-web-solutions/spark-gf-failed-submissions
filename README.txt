@@ -2,7 +2,7 @@
 Contributors: markparnell
 Tags: gravity forms, validation, failed submissions, logging, gravity, forms
 Requires at least: 3.0.1
-Tested up to: 5.9
+Tested up to: 6.0
 Requires PHP: 7.0
 Stable tag: 1.3.1
 License: GPLv2 or later
@@ -39,6 +39,14 @@ It sets what we believe to be sensible defaults, but once installed you'll want 
 2. Form settings page
 
 == Changelog ==
+
+= 1.3.2 =
+20th May 2022
+
+* Added View action link to failed submissions list
+* Fixed PHP warning when viewing failed submission detail if field that failed validation has since been deleted
+* Fixed PHP notice when viewing failed submissions list
+* Fixed JavaScript errors on failed submissions list and detail views
 
 = 1.3.1 =
 25th November 2020
