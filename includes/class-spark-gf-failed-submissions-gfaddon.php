@@ -670,6 +670,7 @@ if (class_exists('GFForms')) {
 						$filter_field = $_GET['f'] ?? '';
 						$filter_operator = $_GET['o'] ?? '';
 						$filter_value = $_GET['v'] ?? '';
+						$filters = array();
 						if (!empty($filter_field) && !empty($filter_value)) {
 							$filters = array(
 									$filter_field => array(
