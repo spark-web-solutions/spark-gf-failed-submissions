@@ -2,9 +2,9 @@
 Contributors: markparnell
 Tags: gravity forms, validation, failed submissions, logging, gravity, forms
 Requires at least: 3.0.1
-Tested up to: 6.2
+Tested up to: 6.3
 Requires PHP: 7.0
-Stable tag: 1.3.2
+Stable tag: 1.3.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -20,7 +20,7 @@ So do we, which is why we built this plugin.
 
 == Installation ==
 
-We recommend you install the plugin via the automated installer interface within Wordpress. Just search for "Spark GF Failed Submissions", then install and activate.
+We recommend you install the plugin via the automated installer interface within WordPress. Just search for "Spark GF Failed Submissions", then install and activate.
 If for some reason you are unable to use this and need to install the plugin manually, you can follow these steps:
 
 1. Download the `spark-gf-failed-submissions.zip` to your computer and unzip it
@@ -39,6 +39,11 @@ It sets what we believe to be sensible defaults, but once installed you'll want 
 2. Form settings page
 
 == Changelog ==
+
+= 1.3.3 =
+19th July 2023
+
+* Fixed error when checking for recent failed submissions matching a given filter
 
 = 1.3.2 =
 20th May 2022
