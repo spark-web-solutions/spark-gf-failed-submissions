@@ -130,7 +130,7 @@ class Spark_Gf_Failed_Submissions_Api {
     		$data[] = $value;
     	}
     	$relation = strcasecmp($relation, 'OR') === 0 ? ' OR ' : ' AND ';
-    	$query = $wpdb->prepare('SELECT count(id) FROM '.$wpdb->spark_gf_failed_submissions.' WHERE date_created_gmt >= %s AND ('.implode($where, $relation).')', $data);
+    	$query = $wpdb->prepare('SELECT count(id) FROM '.$wpdb->spark_gf_failed_submissions.' WHERE date_created_gmt >= %s AND ('.implode($relation, $where).')', $data);
     	$result = $wpdb->get_var($query);
     	return $result;
     }
