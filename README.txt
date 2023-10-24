@@ -2,7 +2,7 @@
 Contributors: markparnell
 Tags: gravity forms, validation, failed submissions, logging, gravity, forms
 Requires at least: 3.0.1
-Tested up to: 6.3
+Tested up to: 6.4
 Requires PHP: 7.0
 Stable tag: 1.3.3
 License: GPLv2 or later
@@ -102,7 +102,7 @@ Any time someone tries to submit a Gravity Form resulting in a validation error.
 If you process any sort of payments through Gravity Forms, you want to know as soon as there's a problem.
 If your site suddenly stops talking to your payment gateway for example, you want to be notified immediately, rather than having to wait for customers to tell you.
 
-The tracked data also enables deeper analysis of your forms, giving you insight into where submissions fail. 
+The tracked data also enables deeper analysis of your forms, giving you insight into where submissions fail.
 You can use this information to craft better forms, increasing your conversion rate!
 
 = Can this plugin block repeated failed submissions? =
