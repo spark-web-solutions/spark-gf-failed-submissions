@@ -2,9 +2,9 @@
 Contributors: markparnell
 Tags: gravity forms, validation, failed submissions, logging, gravity, forms
 Requires at least: 3.0.1
-Tested up to: 6.4
+Tested up to: 6.5
 Requires PHP: 7.0
-Stable tag: 1.3.3
+Stable tag: 1.3.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -39,6 +39,11 @@ It sets what we believe to be sensible defaults, but once installed you'll want 
 2. Form settings page
 
 == Changelog ==
+
+= 1.3.4 =
+27th February 2024
+
+* Added plugin dependency header for WordPress 6.5+
 
 = 1.3.3 =
 19th July 2023

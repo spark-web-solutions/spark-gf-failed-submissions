@@ -6,7 +6,7 @@
  *
  * Plugin Name: Spark GF Failed Submissions
  * Description: Track failed form submissions and get notified when they reach a customisable threshold. Requires Gravity Forms.
- * Version: 1.3.3
+ * Version: 1.3.4
  * Author: Spark Web Solutions
  * Author URI: https://sparkweb.com.au
  * License: GPL-2.0+
@@ -24,7 +24,7 @@ if (!defined('WPINC')) {
 /**
  * Current plugin version.
  */
-define('SPARK_GF_FAILED_SUBMISSIONS_VERSION', '1.3.3');
+define('SPARK_GF_FAILED_SUBMISSIONS_VERSION', '1.3.4');
 
 /**
  * Text Domain
