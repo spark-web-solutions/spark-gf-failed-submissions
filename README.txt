@@ -1,10 +1,10 @@
 === Spark GF Failed Submissions ===
 Contributors: markparnell
-Tags: gravity forms, validation, failed submissions, logging, gravity, forms
+Tags: gravity forms,validation,failed submissions,logging
 Requires at least: 3.0.1
 Tested up to: 6.5
 Requires PHP: 7.0
-Stable tag: 1.3.4
+Stable tag: 1.3.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -39,6 +39,11 @@ It sets what we believe to be sensible defaults, but once installed you'll want 
 2. Form settings page
 
 == Changelog ==
+
+= 1.3.5 =
+27th February 2024
+
+* Removed plugin dependency header as the wordpress.org repository currently blocks plugin submissions which specify plugins not also available on the repo. See discussion on https://meta.trac.wordpress.org/ticket/6921.
 
 = 1.3.4 =
 27th February 2024
