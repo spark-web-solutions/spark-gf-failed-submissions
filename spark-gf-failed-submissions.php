@@ -13,6 +13,7 @@
  * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain: spark-gf-failed-submissions
  * Domain Path: /languages
+ * Requires Plugins: gravityforms
  */
 
 // If this file is called directly, abort.
