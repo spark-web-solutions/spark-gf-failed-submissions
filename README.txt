@@ -123,6 +123,9 @@ Yes! In the settings for each form you can set a limit on the number of failed s
 
 The most important thing you can do is to download and use the plugin! Beyond that...
 
-* You can report security bugs through the Patchstack Vulnerability Disclosure Program. The Patchstack team help validate, triage and handle any security vulnerabilities. [Report a security vulnerability.](https://patchstack.com/database/vdp/9e5fc792-2cc4-4ed7-a31e-f6af026b3eef)
 * If you are able to help with translating the plugin into another language please contact us at hello@heartburst.com.au.
 * If you have any suggestions for new features, or you believe you've found a bug, please check the support forums to make sure it hasn't already been requested/reported by someone else. If you believe it's a new one, create a new support topic with as much detail as possible. In the case of bug reports, please include specific steps to reproduce the issue.
+
+= How can I report security bugs? =
+
+You can report security bugs through the Patchstack Vulnerability Disclosure Program. The Patchstack team help validate, triage and handle any security vulnerabilities. [Report a security vulnerability.](https://patchstack.com/database/vdp/9e5fc792-2cc4-4ed7-a31e-f6af026b3eef)
