@@ -1,14 +1,14 @@
 <?php
 /**
- * @link https://sparkweb.com.au
+ * @link https://heartburst.com.au
  * @since 1.0.0
  * @package Spark_Gf_Failed_Submissions
  *
  * Plugin Name: Spark GF Failed Submissions
  * Description: Track failed form submissions and get notified when they reach a customisable threshold. Requires Gravity Forms.
  * Version: 1.3.5
- * Author: Spark Web Solutions
- * Author URI: https://sparkweb.com.au
+ * Author: Heartburst
+ * Author URI: https://heartburst.com.au
  * License: GPL-2.0+
  * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain: spark-gf-failed-submissions
