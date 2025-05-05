@@ -701,11 +701,11 @@ if (class_exists('GFForms')) {
 						$current_url = remove_query_arg(array('action', '_wpnonce', 'sid'), $current_url);
 
 						// Filters
-						echo '<form id="entry_search_container" method="GET" action="'.remove_query_arg(array('f', 'o', 'v'), $current_url).'">'."\n";
-						echo '	<input type="hidden" name="page" value="'.$_GET['page'].'">'."\n";
-						echo '	<input type="hidden" name="id" value="'.$form_id.'">'."\n";
-						echo '	<input type="hidden" name="paged" value="'.$current.'">'."\n";
-						echo '	<input type="hidden" name="_wpnonce" value="'.$nonce.'">'."\n";
+						echo '<form id="entry_search_container" method="GET" action="'.esc_attr(remove_query_arg(array('f', 'o', 'v'), $current_url)).'">'."\n";
+						echo '	<input type="hidden" name="page" value="'.esc_attr($_GET['page']).'">'."\n";
+						echo '	<input type="hidden" name="id" value="'.esc_attr($form_id).'">'."\n";
+						echo '	<input type="hidden" name="paged" value="'.esc_attr($current).'">'."\n";
+						echo '	<input type="hidden" name="_wpnonce" value="'.esc_attr($nonce).'">'."\n";
 						echo '	<div id="entry_filters" style="position: relative;">'."\n";
 						echo '		<div id="gform-field-filters">'."\n";
 						echo '			<div class="gform-field-filter">'."\n";
@@ -729,10 +729,10 @@ if (class_exists('GFForms')) {
 
 						// Bulk actions
 						echo '<form id="failed-submissions-bulk-actions" method="get">'."\n";
-						echo '	<input type="hidden" name="page" value="'.$_GET['page'].'">'."\n";
-						echo '	<input type="hidden" name="id" value="'.$form_id.'">'."\n";
-						echo '	<input type="hidden" name="paged" value="'.$current.'">'."\n";
-						echo '	<input type="hidden" name="_wpnonce" value="'.$nonce.'">'."\n";
+						echo '	<input type="hidden" name="page" value="'.esc_attr($_GET['page']).'">'."\n";
+						echo '	<input type="hidden" name="id" value="'.esc_attr($form_id).'">'."\n";
+						echo '	<input type="hidden" name="paged" value="'.esc_attr($current).'">'."\n";
+						echo '	<input type="hidden" name="_wpnonce" value="'.esc_attr($nonce).'">'."\n";
 						echo '	<div class="tablenav top">'."\n";
 						echo '		<div class="alignleft actions bulkactions">'."\n";
 						echo '			<label for="bulk-action-selector-top" class="screen-reader-text">Select bulk action</label>'."\n";
