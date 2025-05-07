@@ -526,7 +526,7 @@ if (class_exists('GFForms')) {
 						}
 					} else {
 						/* translators: %s: Opening and closing tags to link the text to the current page */
-						echo '<div class="notice notice-error"><p>'.sprintf(__('Invalid action. Please %sreload the page%s and try again.', 'spark-gf-failed-submissions'), '<a href="'.$this->generate_clean_url().'">', '</a>').'</p></div>';
+						echo '<div class="notice notice-error"><p>'.sprintf(__('Invalid action. Please %sreload the page%s and try again.', 'spark-gf-failed-submissions'), '<a href="'.esc_url($this->generate_clean_url()).'">', '</a>').'</p></div>';
 					}
 				}
 
@@ -701,7 +701,7 @@ if (class_exists('GFForms')) {
 						$current_url = remove_query_arg(array('action', '_wpnonce', 'sid'), $current_url);
 
 						// Filters
-						echo '<form id="entry_search_container" method="GET" action="'.esc_attr(remove_query_arg(array('f', 'o', 'v'), $current_url)).'">'."\n";
+						echo '<form id="entry_search_container" method="GET" action="'.esc_url(remove_query_arg(array('f', 'o', 'v'), $current_url)).'">'."\n";
 						echo '	<input type="hidden" name="page" value="'.esc_attr($_GET['page']).'">'."\n";
 						echo '	<input type="hidden" name="id" value="'.esc_attr($form_id).'">'."\n";
 						echo '	<input type="hidden" name="paged" value="'.esc_attr($current).'">'."\n";
