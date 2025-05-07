@@ -40,6 +40,11 @@ It sets what we believe to be sensible defaults, but once installed you'll want 
 
 == Changelog ==
 
+= 1.3.6 =
+8th May 2025
+
+* Security patch to address [CVE-2025-32670](https://www.cve.org/CVERecord?id=CVE-2025-32670)
+
 = 1.3.5 =
 27th February 2024
 
