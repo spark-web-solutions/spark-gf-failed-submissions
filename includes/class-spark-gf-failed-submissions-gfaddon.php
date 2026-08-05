@@ -488,8 +488,8 @@ if (class_exists('GFForms')) {
 				return;
 			}
 
-			$forms = RGFormsModel::get_forms(null, 'title');
-			$form_id = RGForms::get('id');
+			$forms = GFFormsModel::get_forms(null, 'title');
+			$form_id = GFForms::get('id');
 			if (sizeof($forms) == 0) {
 ?>
 <div style="margin: 50px 0 0 10px;">
