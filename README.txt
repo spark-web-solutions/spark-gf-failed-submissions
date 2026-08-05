@@ -2,7 +2,7 @@
 Contributors: markparnell
 Tags: gravity forms,validation,failed submissions,logging
 Requires at least: 3.0.1
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 7.0
 Stable tag: 1.3.6
 License: GPLv2 or later
@@ -39,6 +39,12 @@ It sets what we believe to be sensible defaults, but once installed you'll want 
 2. Form settings page
 
 == Changelog ==
+
+= 1.3.7 =
+5th August 2026
+
+* Fix error if site timezone is set to an invalid value (props divpay)
+* Updated for GF 3.0 compatibility
 
 = 1.3.6 =
 8th May 2025
