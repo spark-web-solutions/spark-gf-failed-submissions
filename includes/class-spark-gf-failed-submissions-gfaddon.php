@@ -932,9 +932,15 @@ if (class_exists('GFForms')) {
 		 * @return string valid PHP timezone string
 		 */
 		private function wp_get_timezone_string() {
-			// if site timezone string exists, return it
-			if ($timezone = get_option('timezone_string')) {
-				return $timezone;
+			// If a valid site timezone string exists, return it.
+			$timezone = trim((string)get_option('timezone_string'));
+			if ($timezone) {
+				try {
+					new DateTimeZone($timezone);
+					return $timezone;
+				} catch (Exception $exception) {
+					// Fall through to the site's UTC offset for invalid values.
+				}
 			}
 
 			// get UTC offset, if it isn't set then return UTC
